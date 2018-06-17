@@ -1,5 +1,4 @@
 <?
-
 namespace App\Models;
 
 use App\Starter\Db;
@@ -14,30 +13,35 @@ class ProductModel extends Db
 
     public function getAllProducts($catName, $page)
     {
-        $per_page = 10;
+        $limit = 10;
+        $offset = $limit * ($page - 1);
 
-        $stmt = $this->pdo->prepare("SELECT
-      products.id,
-      products.name as name,
-      categories.name as category_name,
-      products.price as price,
-      products.photo,
-      products.description
-      FROM products
-      INNER JOIN categories
-      ON categories.id = products.category_id"
-            . ($catName !== 'all' ? " WHERE categories.name = :catName" : "") .
-            " ORDER BY products.ts LIMIT :limit OFFSET :offset");
+        $sql = "SELECT
+          products.id,
+          products.name as name,
+          categories.name as category_name,
+          products.price as price,
+          products.photo,
+          products.description
+          FROM products
+          INNER JOIN categories
+          ON categories.id = products.category_id";
+
+        if ($catName !== 'all') {
+            $sql = $sql . " WHERE categories.name = :catName";
+        }
+        $sql = $sql . " ORDER BY products.ts LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($sql);
 
         if ($catName !== 'all') {
             $stmt->bindValue(':catName', $catName);
         }
 
-        $stmt->bindValue(':limit', (int)$per_page, \PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int)($page - 1) * $per_page, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
 
         $stmt->execute();
-
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -79,33 +83,44 @@ class ProductModel extends Db
         $stmt->bindValue(':name', $productData['name']);
         $stmt->bindValue(':price', $productData['price']);
         $stmt->bindValue(':categoryId', $productData['categoryId']);
-        $stmt->bindValue(':productId', $productData['productId']);
+        $stmt->bindValue(':productId', $productData['id']);
 
         return $stmt->execute();
     }
 
-    public function toggleProductPromotion($productId, $promotionId)
+    public function setProductPromotions($productId, $promotionArray)
     {
-        $stmt = $this->pdo->prepare('SElECT * FROM products_promotions INNER JOIN products 
-          ON products_promotions.product_id = products.id AND products.id = ? AND products_promotions.promotion_id = ?');
+        $sql = "DELETE FROM products_promotions WHERE product_id = :product_id;
+                INSERT INTO products_promotions (product_id, promotion_id) VALUES";
 
-        $stmt->execute([$productId, $promotionId]);
+        foreach ($promotionArray as $key => $promotionId) {
+            $sql = $sql . " (:product_id$key, :promotion_id$key)";
 
-        $isActive = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if (!$isActive) {
-            $setStmt = $this->pdo->prepare('INSERT INTO products_promotions (product_id, promotion_id) VALUES (?, ?)');
-            return $setStmt->execute([$productId, $promotionId]);
-        } else {
-            $setStmt = $this->pdo->prepare('DELETE FROM products_promotions WHERE product_id = ? AND promotion_id = ?');
-            return $setStmt->execute([$productId, $promotionId]);
+            if (($key > count($promotionArray) - 1)) {
+                $sql = $sql . ", ";
+            }
         }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':product_id', $productId, \PDO::PARAM_INT);
+
+        foreach ($promotionArray as $key => $promotionId) {
+            $stmt->bindValue(":product_id$key", $productId, \PDO::PARAM_INT);
+            $stmt->bindValue(":promotion_id$key", $promotionId, \PDO::PARAM_INT);
+        }
+
+        return $stmt->execute();
     }
 
     public function getOneProduct($productId)
     {
-        $stmt = $this->pdo->prepare('SELECT products.id, products.price, categories.name, categories.id as category_id FROM products LEFT JOIN categories
-        ON products.category_id = categories.id WHERE products.id = ?');
+        $stmt = $this->pdo->prepare('SELECT 
+        products.id, 
+        products.name as name, products.price,
+        categories.name as categoryName, 
+        categories.id as category_id,
+        products.photo
+        FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.id = ?');
 
         $stmt->execute([$productId]);
 
@@ -132,10 +147,21 @@ class ProductModel extends Db
 
     public function getCountProducts($categoryName)
     {
-        $stmt = $this->pdo->prepare('SELECT COUNT(id) FROM products INNER JOIN categories
-    ON products.category_id = categories.id AND categories.name = ?');
-        $stmt->execute([$categoryId]);
+        $sql = "SELECT COUNT(id) as count FROM products";
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        if ($categoryName !== 'all') {
+            $sql = $sql . ' INNER JOIN categories
+    ON products.category_id = categories.id AND categories.name = :cat_name';
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+
+        if ($categoryName !== 'all') {
+            $stmt->bindValue(':cat_name', $categoryName);
+        }
+
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }

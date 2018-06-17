@@ -13,6 +13,11 @@ class Router
         define('USER', $userModel->getCurrUser() ? array_merge(['auth' => true], $userModel->getCurrUser()) : ['auth' => false]);
     }
 
+    static function isActive($url)
+    {
+        return strpos(strtolower($_SERVER['REQUEST_URI']), strtolower($url)) === 0 ? 'active' : '';
+    }
+
     static function getRouteInfo()
     {
         $checkedParam = new \stdClass();

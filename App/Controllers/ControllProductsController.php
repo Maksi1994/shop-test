@@ -17,7 +17,7 @@ class ControllProductsController
         }
     }
 
-    public function showAll($cat = 'all', $page = 1)
+    public function showAll($page = 1, $cat = 'all')
     {
         $productModel = new ProductModel;
         $list = $productModel->getAllProducts($cat, $page);
@@ -82,22 +82,25 @@ class ControllProductsController
 
     }
 
-    public function toggleProductPromotion($productId, $promotionId) {
-        $productModel = new ProductModel;
-        $productModel->toggleProductPromotion($productId, $promotionId);
-
-        header('location: /controllProducts/showOne/'.$productId);
-    }
-
     public function updateProduct()
     {
         $productModel = new ProductModel;
+        $activePromotions = [];
+        $isSucess = false;
+
+        foreach($_POST as $key => $val) {
+            if (strpos($key, 'prom') === 0) {
+                 $activePromotions[] = $val;
+            }
+        }
+
         $isSucess = $productModel->updateProduct($_POST);
+        $isSucess = $productModel->setProductPromotions($_POST['id'], $activePromotions);
 
         if ($isSucess) {
-            header('location: /controllProducts/showOne/'.$_POST['productId']);
+            header('location: /controllProducts/showOne/'.$_POST['id']);
         } else {
-            header('location: /controllProducts/showOne/'.$_POST['productId'].'/errorUpdate');
+            header('location: /controllProducts/showOne/'.$_POST['id'].'/errorUpdate');
         }
     }
 

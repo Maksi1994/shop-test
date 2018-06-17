@@ -65,7 +65,7 @@ class UserController
             return $data;
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $way;
+            $way = '';
             $isValidUserData = isset($_POST['first_name'],
                                      $_POST['last_name'],
                                      $_POST['login'],

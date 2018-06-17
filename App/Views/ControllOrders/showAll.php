@@ -3,31 +3,35 @@
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Photo</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
+            <th scope="col">Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Customer Email</th>
+            <th scope="col">Count Products</th>
+            <th scope="col">Full Price</th>
             <th scope="col">Edit</th>
         </tr>
         </thead>
         <tbody>
-        <? foreach (self::$data['list'] as $listIndex => $item) { ?>
+        <?foreach (self::$data['list'] as $listIndex => $item) {?>
             <tr>
-                <td><?= $listIndex ?></td>
-                <td><?= $item['name'] ?></td>
+                <td><?=$listIndex?></td>
+                <td><?=date('D, d M Y H:i', $item['ts_create'])?></td>
+                <td><?=$item['curr_status']?></td>
+                <td><?=$item['customer_name']?></td>
+                <td><?=$item['customer_email']?></td>
+                <td><?=$item['full_count_products']?></td>
+                <td><?=$item['full_price']?> $</td>
                 <td>
-                    <img class="product-image" src="<?= "/assets/images/products/" . $item['photo'] ?>" alt="">
-                </td>
-                <td><?= $item['description'] ?></td>
-                <td><?= $item['price'] ?></td>
-                <td>
-                    <a href="/controllProducts/showOne/<?= $item['id'] ?>">Edit</a>
+                    <a href="/controllOrders/showOne/<?=$item['order_id']?>">Edit</a>
                 </td>
             </tr>
-        <? } ?>
+        <?}?>
         </tbody>
     </table>
 </section>
+
+
 <? if ((int)self::$data['count'] > 1) { ?>
     <nav class="mt-5 " aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
