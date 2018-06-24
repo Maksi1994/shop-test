@@ -5,6 +5,7 @@ use App\Starter\Db;
 
 class ProductModel extends Db
 {
+    private $pdo;
 
     public function __construct()
     {

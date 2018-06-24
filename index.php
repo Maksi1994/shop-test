@@ -15,6 +15,7 @@ $data = Router::run();
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="/assets/styles/controll-products.css">
     <link rel="stylesheet" href="/assets/styles/controll-orders.css">
+    <link rel="stylesheet" href="/assets/styles/controll-categories.css">
     <link rel="stylesheet" href="/assets/styles/main.css">
 </head>
 <body>
@@ -38,10 +39,19 @@ $data = Router::run();
                     </div>
                 </li>
 
+                <li class="nav-item dropdown mr-2">
+                    <a class="nav-link dropdown-toggle <?=Router::isActive('/controllCategories')?>" data-toggle="dropdown"
+                       role="button" aria-haspopup="true"
+                       aria-expanded="false">Categories</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item <?=Router::isActive('/controllCategories/showAll')?>" href="/controllCategories/showAll" >Show All</a>
+                        <a class="dropdown-item <?=Router::isActive('/controllCategories/addOne')?>" href="/controllCategories/addOne">Add Category</a>
+                    </div>
+                </li>
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?=Router::isActive('/ControllOrders')?>" data-toggle="dropdown" href="#" role="button"
-                       aria-haspopup="true"
-                       aria-expanded="false">Customers & Orders</a>
+                    <a class="nav-link dropdown-toggle <?=Router::isActive('/ControllOrders')?>" data-toggle="dropdown"
+                       role="button">Customers & Orders</a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item <?=Router::isActive('/ControllOrders/showAll')?>" href="/ControllOrders/showAll">All Orders</a>
                     </div>

@@ -1,0 +1,18 @@
+.list {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    width: 750px;
+}
+
+.check-parent {
+    margin-top: 7px;
+}
+
+.check-parent + select {
+    pointer-events: none;
+}
+
+.check-parent:checked + select {
+    pointer-events: auto;
+}
