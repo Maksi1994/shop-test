@@ -32,6 +32,7 @@ class Router
         $checkedParam->controller = $controllerData[0] ? ucfirst($controllerData[0]) : 'Index';
         $checkedParam->action = $controllerData[1] ?? 'index';
 
+
         // obtain controller's params;
         $checkedParam->params = array_slice($controllerData, 2);
         $checkedParam->queryParams = $queryParams;
@@ -48,6 +49,10 @@ class Router
         // create controller
         $controllerInstans = new $controllerName;
 
-        return call_user_func_array(array($controllerInstans, $routing->action), $routing->params);
+        if (method_exists($controllerInstans, $routing->action)) {
+            return call_user_func_array(array($controllerInstans, $routing->action), $routing->params);
+        } else {
+            return [];
+        }
     }
 }

@@ -2,20 +2,28 @@
 
 namespace App\Controllers;
 
-use App\Models\OrderModel;
+use App\Models\ControllOrderModel;
+use App\Models\UserModel;
 
 class ControllOrdersController
 {
 
     public function __construct()
     {
+
+        $this->orderModel = new ControllOrderModel();
+        $this->userModel = new UserModel();
+
+        if (!$this->userModel->getCurrUser()) {
+            header('location: /user/login');
+            exit;
+        }
     }
 
     public function showAll($page = 1)
     {
-        $orderModel = new OrderModel();
-        $list = $orderModel->getAll($page);
-        $count = $orderModel->getCount();
+        $list = $this->orderModel->getAll($page);
+        $count = $this->orderModel->getCount();
 
         return [
             'list' => $list,
@@ -26,9 +34,8 @@ class ControllOrdersController
 
     public function showOne($id)
     {
-        $orderModel = new OrderModel();
-        $order = $orderModel->getOne($id);
-        $order['products'] = $orderModel->getOrderProducts($id);
+        $order = $this->orderModel->getOne($id);
+        $order['products'] = $this->orderModel->getOrderProducts($id);
 
         return $order;
     }
@@ -36,9 +43,7 @@ class ControllOrdersController
 
     public function updateOrder()
     {
-        $orderModel = new OrderModel();
         $deletedProducts = [];
-        $sucess = false;
 
         foreach ($_POST as $key => $val) {
             if (strpos($key, 'product=') === 0) {
@@ -52,10 +57,15 @@ class ControllOrdersController
             }
         }
 
-        $sucess = $orderModel->updateOne($_POST);
-        $sucess = $orderModel->setOrderProducts($_POST['id'], $deletedProducts);
+        if (count($deletedProducts) > 0) {
+            $updatedProduct = $this->orderModel->updateOne($_POST);
+            $updatetOrderCount = $this->orderModel->setOrderProducts($_POST['id'], $deletedProducts);
+        } else {
+            $this->deleteOne($_POST['id']);
+            exit;
+        }
 
-        if ($sucess) {
+        if ($updatedProduct && $updatetOrderCount) {
             header("location: /controllOrders/showOne/{$_POST['id']}");
         } else {
             header("location: /controllOrders/showOne/{$_POST['id']}/errorUpdate");
@@ -64,9 +74,7 @@ class ControllOrdersController
 
     public function deleteOne($id)
     {
-        $orderModel = new OrderModel();
-        $orderModel->deleteOne($id);
-
-        header("location: /controllOrders/showAll/1");
+        $this->orderModel->deleteOne($id);
+        header("location: /controllOrders/showAll");
     }
 }

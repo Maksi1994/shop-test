@@ -1,15 +1,35 @@
-<section class="container mx-auto">
+<?
+function build_tree_options($cats, $parent_id, $catId)
+{
+    $tree = '';
+    if (is_array($cats) and isset($cats[$parent_id])) {
+        foreach ($cats[$parent_id] as $cat) {
+                $catName = ucfirst($cat['name']);
+                $checked = $cat['id'] == $catId ? 'selected' : '';
+                $tree .= "<option $checked  value='{$cat['id']}'>" . $catName . "</option>";
+
+                if (is_array($cats[$cat['id']])) {
+                    $tree .= "<optgroup label='$catName Subcategories'>";
+                    $tree .= build_tree_options($cats, $cat['id'], $catId);
+                    $tree .= " </optgroup>";
+                }
+        }
+    } else return null;
+
+    return $tree;
+}
+
+?>
+
+<section class="container mx-auto products-controll">
     <div class="row mt-5">
         <div class="col-3 mr-auto">
             <h5 class="pl-1 card-title text-uppercase"><?= self::$data['product']['name'] ?></h5>
 
             <div class="mt-5 border p-3">
-                <img src="<?="/assets/images/products/".self::$data['product']['photo']?>" class="img-fluid "
+                <img  src="<?= "/assets/images/products/" . self::$data['product']['photo'] ?>" class="img-fluid product-edit-img"
                      alt="Responsive image">
             </div>
-            <a href="/controllProducts/deleteOne/<?= self::$data['product']['id'] ?>" class="mt-5 w-100 btn btn-danger"
-               tabindex="-1" role="button"
-               aria-disabled="true">Delete product</a>
         </div>
         <div class="col-6">
             <form method="post" action="/controllProducts/updateProduct">
@@ -30,23 +50,30 @@
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Category</label>
                     <select name="categoryId" class="form-control" id="exampleFormControlSelect1">
-                        <? foreach (self::$data['allCategories'] as $category) { ?>
-                            <option value="<?= $category['id'] ?>" <?=$category['id'] == self::$data['product']['category_id'] ? "selected" : ""?>> <?= $category['name']?></option>
-                        <? } ?>
+                        <option value <?=(isset(self::$data['product']['category_id']) ? '' : 'selected')?></option>
+                        <?=build_tree_options(self::$data['allCategories'], 0, self::$data['product']['category_id'])?>
                     </select>
                 </div>
+                <div class="form-group mt-5 pl-4">
+                    <label for="m-0 exampleFormControlSelect2 font-weight-bold">Enabled Status</label>
+
+                    <input class="ml-3" type="checkbox" name="enabled" checked>
+                </div>
+
                 <div class="form-group mt-5">
                     <label for="exampleFormControlSelect2 text-bold">Active Promotions</label>
+
                     <ul class="mt-2 list-group list-group-flush">
                         <? foreach (self::$data['allPromotions'] as $promotion) { ?>
                             <div class="list-group-item pr-0 d-flex justify-content-between align-items-center">
                                 <p><?= $promotion['name'] ?></p>
-                                <input name="<?="promotion={$promotion['id']}" ?>"
+                                <input name="<?= "promotion={$promotion['id']}" ?>"
                                        type="checkbox" <?= $promotion['active'] ? 'checked' : '' ?>
-                                       value="<?= $promotion['id']?>" id="defaultCheck1">
+                                       value="<?= $promotion['id'] ?>" id="defaultCheck1">
                             </div>
                         <? } ?>
                     </ul>
+
                 </div>
 
                 <div class="row border-top mt-5 mx-1">

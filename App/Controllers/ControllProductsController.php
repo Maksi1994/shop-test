@@ -1,82 +1,69 @@
 <?
 namespace App\Controllers;
 
-use App\Models\ProductModel;
+use App\Models\ControllCategoryModel;
+use App\Models\ControllProductModel;
 use App\Models\UserModel;
 
 class ControllProductsController
 {
+    private  $productModel;
+    private  $categoryModel;
+    private $userModel;
 
     function __construct()
     {
-        $userModel = new UserModel;
+        $this->productModel = new ControllProductModel();
+        $this->categoryModel = new ControllCategoryModel();
+        $this->userModel = new UserModel();
 
-        if (!$userModel->getCurrUser()) {
+        if (!$this->userModel->getCurrUser()) {
             header('location: /user/login');
             exit;
         }
+
     }
 
     public function showAll($page = 1, $cat = 'all')
     {
-        $productModel = new ProductModel;
-        $list = $productModel->getAllProducts($cat, $page);
-        $count = $productModel->getCountProducts($cat);
+        $list = $this->productModel->getAllProducts($cat, $page);
+        $count = $this->productModel->getCountProducts($cat);
 
         return [
             'list' => $list,
             'page' => $page,
             'cat' => $cat,
-            'count' => $count,
+            'count' => ceil(((int) $count) / 10),
         ];
     }
 
-    public function showOne($id, $viewError = '')
+    public function showOne($id)
     {
-        $productModel = new ProductModel;
-        $product = $productModel->getOneProduct($id);
-        $allCategories = $productModel->getAllCategories();
-        $promotionsIds = array_column($productModel->getPromotions($id), 'id');
-        $errorMessage = '';
+        $product = $this->productModel->getOneProduct($id);
+        $allCategories = $this->categoryModel ->getAllCategories();
+        $promotionsIds = array_column($this->productModel->getPromotions($id), 'id');
 
-        if (!isset($product)) {
-            header('location: /controllProducts/showAll');
-        }
-
-        $product['promotions'] = $productModel->getPromotions($id);
+        $product['promotions'] = $this->productModel->getPromotions($id);
 
         $allPtomotions = array_map(function ($promotionItem) use ($promotionsIds) {
             $promotionItem['active'] = array_search($promotionItem['id'], $promotionsIds) !== false;
 
             return $promotionItem;
-        }, $productModel->getAllPromotions());
-
-        switch ($viewError) {
-            case 'updateError':
-                $errorMessage = 'Update has not done, happened some error';
-        }
+        }, $this->productModel->getAllPromotions());
 
 
         return [
             'product' => $product,
             'allCategories' => $allCategories,
-            'allPromotions' => $allPtomotions,
-            'errorMessage' => $errorMessage
+            'allPromotions' => $allPtomotions
         ];
     }
 
-    public function showFormAdd($err = null)
+    public function showFormAdd()
     {
-        $productModel = new ProductModel;
-        $errMessage = '';
-        $allCategories = $productModel->getAllCategories();
-
-        if ($err === 'failed') {
-            $errMessage = 'Uploaded Error.';
-        }
+        $allCategories = $this->categoryModel->getAllCategories();
 
         return [
-            'errMessage' => $errMessage,
             'categories' => $allCategories
         ];
 
@@ -84,59 +71,58 @@ class ControllProductsController
 
     public function updateProduct()
     {
-        $productModel = new ProductModel;
         $activePromotions = [];
-        $isSucess = false;
 
-        foreach($_POST as $key => $val) {
+        foreach ($_POST as $key => $val) {
             if (strpos($key, 'prom') === 0) {
-                 $activePromotions[] = $val;
+                $activePromotions[] = $val;
             }
         }
 
-        $isSucess = $productModel->updateProduct($_POST);
-        $isSucess = $productModel->setProductPromotions($_POST['id'], $activePromotions);
+        $updatedProduct = $this->productModel->updateProduct($_POST);
+        $updatedProductPromotions = $this->productModel->setProductPromotions($_POST['id'], $activePromotions);
 
-        if ($isSucess) {
-            header('location: /controllProducts/showOne/'.$_POST['id']);
+        if ($updatedProduct && $updatedProductPromotions) {
+            header('location: /controllProducts/showOne/' . $_POST['id']);
         } else {
-            header('location: /controllProducts/showOne/'.$_POST['id'].'/errorUpdate');
+            header('location: /controllProducts/showOne/' . $_POST['id'] . '/errorUpdate');
         }
     }
 
     public function addOne()
     {
-        $productModel = new ProductModel;
         $isUploaded = $_FILES['photo']['error'] === \UPLOAD_ERR_OK;
 
         if ($isUploaded && isset($_POST['name'],
                 $_POST['description'],
                 $_POST['category_id'],
                 $_POST['price'],
-                $_POST['count'],
-                $_FILES['photo']
+                $_POST['count']
             )) {
+
             $photoName = time() . $_FILES['photo']['name'];
             $uploadsDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/products';
-            move_uploaded_file($_FILES['photo']['tmp_name'], "$uploadsDir/$photoName");
+            $isSavedPhoto = move_uploaded_file($_FILES['photo']['tmp_name'], "$uploadsDir/$photoName");
+            $category = $this->categoryModel->getOneCategory($_POST['category_id']);
 
             $_POST['photo'] = $photoName;
-            $isSucces = $productModel->addOne($_POST);
 
-            if ($isSucces) {
-                $category = $productModel->getCategoryById($_POST['category_id']);
-
-                header("location: /controllProducts/showAll/{$category['name']}");
-            } else {
-                header("location: /controllProducts/showFormAdd/");
+            if ($isSavedPhoto) {
+                $isSavedData = $this->productModel->addOne($_POST);
             }
+        }
+
+        if ($isSavedPhoto && $isSavedData) {
+            header("location: /controllProducts/showAll/{$category['name']}");
+        } else {
+            header("location: /controllProducts/showFormAdd/");
         }
     }
 
-    public function deleteOne($id, $category)
+    public function toggleStatus($id)
     {
-        $productModel = new ProductModel;
-        $productModel->deleteOne($id);
+        $this->productModel->toggleStatus($id);
+
         header("location: /controllProducts/showAll");
     }
 }

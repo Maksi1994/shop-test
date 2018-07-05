@@ -2,6 +2,34 @@
     width: 50px;
 }
 
+.header-controll-panel .nav-link:hover {
+    color: #fff;
+}
+
 .pointer {
     cursor: pointer;
 }
+
+
+.controll-add-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    cursor: pointer;
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    line-height: 70px;
+    vertical-align: middle;
+    color: #fff !important;
+    font-size: 2.5em;
+    text-indent: 0 !important;
+    text-align: center;
+    font-family: none !important;
+    display: block;
+    border: none !important;
+    text-decoration: none !important;
+    box-shadow: 0 0 7px 1px grey;
+}
+
+

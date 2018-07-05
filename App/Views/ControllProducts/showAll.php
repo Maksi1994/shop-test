@@ -1,4 +1,4 @@
-<section class="d-block px-3 mt-5">
+<section class="d-block px-3 mt-5 products-controll">
     <table class="table table-sm">
         <thead>
         <tr>
@@ -12,7 +12,7 @@
         </thead>
         <tbody>
         <? foreach (self::$data['list'] as $listIndex => $item) { ?>
-            <tr>
+            <tr class="<?=$item['status'] == 'e' ? '' : 'table-dark'?>">
                 <td><?= $listIndex ?></td>
                 <td><?= $item['name'] ?></td>
                 <td>
@@ -31,22 +31,23 @@
 <? if ((int)self::$data['count'] > 1) { ?>
     <nav class="mt-5 " aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-            <? if ((int)self::$data['page'] - 1 > 0) { ?>
+            <? if (self::$data['page'] - 1 > 0) { ?>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                    <a class="page-link" href="/controllProducts/showAll/<?= self::$data['page'] - 1 ?>"
+                       aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
             <? } ?>
 
-            <? for ($i = 0; $i < (int)self::$data['count']; $i++) { ?>
+            <? for ($i = 0; $i < self::$data['count']; $i++) { ?>
                 <li class="page-item"><a class="page-link"
                                          href="/controllProducts/showAll/<?= $i + 1 ?>"><?= $i + 1 ?></a>
                 </li>
             <? } ?>
 
-            <? if ((int)self::$data['page'] < (int)self::$data['count']) { ?>
+            <? if (self::$data['page'] < self::$data['count']) { ?>
                 <li class="page-item">
                     <a class="page-link" href="/controllProducts/showAll/<?= self::$data['page'] + 1 ?>"
                        aria-label="Next">
@@ -58,3 +59,5 @@
         </ul>
     </nav>
 <? } ?>
+
+<a class="controll-add-btn bg-primary" href="/controllProducts/showFormAdd">+</a>

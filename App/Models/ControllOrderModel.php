@@ -3,19 +3,13 @@ namespace App\Models;
 
 use App\Starter\Db;
 
-class OrderModel extends Db
+class ControllOrderModel extends Db
 {
     private $pdo;
 
     public function __construct()
     {
         $this->pdo = $this->connectDb();
-    }
-
-
-    public function create($orderData)
-    {
-
     }
 
     public function getAll($page)
@@ -109,19 +103,19 @@ class OrderModel extends Db
     }
 
     public function setOrderProducts($orderId, $arrayProducts) {
-        $stmt = $this->pdo->prepare("DELETE FROM products_orders WHERE order_id = ?");
-        $stmt->execute([$orderId]);
-        $sqlUpdate = "INSERT INTO products_orders (product_id, order_id, count, price_for_one) VALUES";
+        $sqlUpdate = "DELETE FROM products_orders WHERE order_id = :order_id; INSERT INTO products_orders (product_id, order_id, count, price_for_one) VALUES";
 
         foreach ($arrayProducts as $key => $productItem) {
             $sqlUpdate = $sqlUpdate . " (:product_id$key, :order_id$key, :count$key, :price_for_one$key)";
 
-            if (($key > count($arrayProducts) - 1)) {
+            if (($key < count($arrayProducts) - 1)) {
                 $sqlUpdate = $sqlUpdate . ", ";
             }
         }
 
         $stmtUpdate = $this->pdo->prepare($sqlUpdate);
+        $stmtUpdate->bindValue(':order_id', $orderId, \PDO::PARAM_INT);
+
         foreach ($arrayProducts as $key => $productItem) {
             $stmtUpdate->bindValue(":product_id$key", $productItem['id'], \PDO::PARAM_INT);
             $stmtUpdate->bindValue(":order_id$key", $orderId, \PDO::PARAM_INT);

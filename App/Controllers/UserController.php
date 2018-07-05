@@ -4,11 +4,15 @@ use App\Models\UserModel;
 
 class UserController
 {
+    private $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
 
     public function login($e_msg = null)
     {
-        $userModel = new UserModel;
-
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
           $data = [];
           switch ($e_msg) {
@@ -22,12 +26,11 @@ class UserController
           return $data;
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $way;
             if (isset($_POST['login']) && isset($_POST['password'])) {
-                $user = $userModel->getUserByLogin($_POST['login']);
+                $user = $this->userModel->getUserByLogin($_POST['login']);
                 if ($user) {
                     if ($user->password === $_POST['password']) {
-                        $userModel->setCurrUser($user->id);
+                        $this->userModel->setCurrUser($user->id);
                         $way = '/';
                     }
                 } else {
@@ -41,19 +44,15 @@ class UserController
     }
 
     public function logout() {
-      $userModel = new UserModel;
-
-      $userModel->clearCurrUser();
+      $this->userModel->clearCurrUser();
       header('Location: /user/login');
     }
 
     public function regist($e_msg = null)
     {
-      $userModel = new UserModel;
-
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $data = [];
-            $data['roles'] = $userModel->getAllRoles();
+            $data['roles'] = $this->userModel->getAllRoles();
             switch ($e_msg) {
               case 'valid_error':
                 $data['e_message'] = 'Valid error, check all input data.';
@@ -74,7 +73,7 @@ class UserController
             $isValidEmail = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL); ;
 
             if($isValidUserData && $isValidEmail) {
-               $isDone = $userModel->createUser($_POST);
+               $isDone = $this->userModel->createUser($_POST);
                if (!$isDone) {
                   $way = '/database_error';
                }

@@ -4,7 +4,6 @@ function build_tree_options($cats, $parent_id, $catId)
     $tree = '';
     if (is_array($cats) and isset($cats[$parent_id])) {
         foreach ($cats[$parent_id] as $cat) {
-            if ($cat['id'] !== $catId) {
                 $catName = ucfirst($cat['name']);
                 $checked  = $cat['id'] == $catId ? 'selected' : '';
                 $tree .= "<option $checked  value='{$cat['id']}'>" . $catName . "</option>";
@@ -14,7 +13,6 @@ function build_tree_options($cats, $parent_id, $catId)
                     $tree .=  build_tree_options($cats, $cat['id'], $catId);
                     $tree .= " </optgroup>";
                 }
-            }
         }
     } else return null;
 
@@ -41,8 +39,8 @@ function build_tree($cats, $parent_id, $catId)
 }
 
 ?>
-<div class="container x-auto mt-5">
-    <div class="row">
+<div class="container controll-categories x-auto mt-5">
+    <div class="row edition-form">
         <form method="post" action="/controllCategories/editOne" class="col-3 input-group mb-3 row">
             <input name="catId" type="hidden" value="<?=self::$data['category']['id']?>">
             <div class="form-group w-100">
@@ -53,24 +51,32 @@ function build_tree($cats, $parent_id, $catId)
 
 
             <div class=" w-100 form-group">
-                <label for="exampleFormControlSelect1 w-100">Parent</label>
+                <label for="exampleFormControlSelect1 w-100">Has Parent</label>
                 <input type="checkbox"
                        name="hasParent"
                        class="form-check-input check-parent ml-5"
                     <?=self::$data['category']['parent_id'] != 0 ? 'checked' : ''?>
                 >
                 <select class="form-control" name="parentId">
-                    <?=build_tree_options(self::$data['allCategories'], 0, self::$data['category']['parent_id'])?>
+                    <?=build_tree_options(self::$data['possibleParents'], 0, self::$data['category']['parent_id'])?>
                 </select>
             </div>
             <div class=" w-100 row mt-5 mx-1">
-                <button class="mt-5 btn-lg btn btn-success d-block">Save</button>
+                <button class=" w-100 mt-5 btn-lg btn btn-success d-block text-white">Save</button>
             </div>
+            <div class=" w-100 row mx-1">
+                <a class="mt-5 w-100 d-block btn-lg btn btn-danger" href="/controllCategories/deleteOne/<?=self::$data['category']['id']?>" role="button" aria-disabled="true">Delete</a>
+            </div>
+
         </form>
         <div class="col-9">
             <h1 class="mb-5 text-right">Map</h1>
             <?= build_tree(self::$data['allCategories'], 0, self::$data['category']['id']) ?>
         </div>
     </div>
+
 </div>
+
+
+
 
