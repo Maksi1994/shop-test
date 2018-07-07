@@ -54,8 +54,12 @@ class ControllCategoryModel extends Db
         $stmt = $this->pdo->prepare('UPDATE categories SET name = :name, parent_id = :parent_id WHERE id = :catId');
 
         $stmt->bindValue(':name', $data['name']);
-        $stmt->bindValue(':parent_id', isset($data['parentId']) ? $data['parentId'] : 0);
+        $stmt->bindValue(':parent_id', 0);
         $stmt->bindValue(':catId', $data['catId']);
+
+        if (isset($data['hasParnt'])) {
+            $stmt->bindValue(':parent_id', $data['parent_id']);
+        }
 
         return $stmt->execute();
     }

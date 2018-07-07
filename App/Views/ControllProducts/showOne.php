@@ -5,8 +5,8 @@ function build_tree_options($cats, $parent_id, $catId)
     if (is_array($cats) and isset($cats[$parent_id])) {
         foreach ($cats[$parent_id] as $cat) {
                 $catName = ucfirst($cat['name']);
-                $checked = $cat['id'] == $catId ? 'selected' : '';
-                $tree .= "<option $checked  value='{$cat['id']}'>" . $catName . "</option>";
+                $selected = $cat['id'] == $catId ? 'selected' : '';
+                $tree .= "<option $selected  value='{$cat['id']}'>" . $catName . "</option>";
 
                 if (is_array($cats[$cat['id']])) {
                     $tree .= "<optgroup label='$catName Subcategories'>";
@@ -18,7 +18,6 @@ function build_tree_options($cats, $parent_id, $catId)
 
     return $tree;
 }
-
 ?>
 
 <section class="container mx-auto products-controll">
@@ -50,14 +49,13 @@ function build_tree_options($cats, $parent_id, $catId)
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Category</label>
                     <select name="categoryId" class="form-control" id="exampleFormControlSelect1">
-                        <option value <?=(isset(self::$data['product']['category_id']) ? '' : 'selected')?></option>
+                        <option value <?=(isset(self::$data['product']['category_id']) ? '' : 'selected')?>></option>
                         <?=build_tree_options(self::$data['allCategories'], 0, self::$data['product']['category_id'])?>
                     </select>
                 </div>
                 <div class="form-group mt-5 pl-4">
                     <label for="m-0 exampleFormControlSelect2 font-weight-bold">Enabled Status</label>
-
-                    <input class="ml-3" type="checkbox" name="enabled" checked>
+                    <input class="ml-3" type="checkbox" <?=(self::$data['product']['status'] === 'e') ? 'checked' : ''?> name="enabled">
                 </div>
 
                 <div class="form-group mt-5">
@@ -79,7 +77,6 @@ function build_tree_options($cats, $parent_id, $catId)
                 <div class="row border-top mt-5 mx-1">
                     <button class="mt-5 w-100 btn-lg btn btn-success">Save</button>
                 </div>
-
             </form>
         </div>
         <div class="row">

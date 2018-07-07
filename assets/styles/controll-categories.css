@@ -21,3 +21,14 @@
     height: 420px;
 }
 
+.controll-categories .imagePreview {
+  object-fit: contain;
+  width: 100px;
+  height: 100px;
+  object-position: center;
+  display: none;
+}
+
+.controll-categories  .imagePreview.show {
+  display: block;
+}

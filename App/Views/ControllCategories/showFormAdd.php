@@ -23,10 +23,13 @@ function build_tree_options($cats, $parent_id)
     <form method="post" action="/controllCategories/addCategory" enctype="multipart/form-data"
           class="d-block mt-5 w-50 mx-auto">
 
+        <div class="d-flex justify-content-center mb-5">
+            <img class="imagePreview" src="" alt="">
+        </div>
+
         <div class="form-group">
             <label for="exampleInputFile">Category photo</label>
             <input name="photo" type="file" class="form-control-file">
-            <small class="form-text text-muted">This photo will show all customers</small>
         </div>
 
         <input name="default_parent_id" value="0" type="hidden">
@@ -45,3 +48,26 @@ function build_tree_options($cats, $parent_id)
         <button type="submit" class="btn w-25 mx-auto d-block mt-5 btn-primary">Save</button>
     </form>
 </div>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    var fileInput = document.body.querySelector('input[name=photo]');
+    var imagePreview = document.body.querySelector('.imagePreview');
+
+    fileInput.addEventListener('change', function() {
+        var reader = new FileReader();
+
+        reader.readAsDataURL(fileInput.files[0]);
+
+        reader.onload = function () {
+          console.log(reader.result);
+          imagePreview.src = reader.result;
+          imagePreview.classList.add('show');
+        };
+
+        reader.onerror = function (error) {
+          console.log('Error: ', error);
+        };
+    });
+  });
+</script>
