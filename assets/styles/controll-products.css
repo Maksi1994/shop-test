@@ -10,5 +10,14 @@
     object-position: center;
 }
 
+.products-controll  .imagePreview {
+  object-fit: contain;
+  width: 100px;
+  height: 100px;
+  object-position: center;
+  display: none;
+}
 
-
+.products-controll  .imagePreview.show {
+  display: block;
+}

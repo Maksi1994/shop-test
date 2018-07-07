@@ -5,7 +5,6 @@ function build_tree_options($cats, $parent_id)
     if (is_array($cats) and isset($cats[$parent_id])) {
         foreach ($cats[$parent_id] as $cat) {
             $catName = ucfirst($cat['name']);
-
             $tree .= "<option value='{$cat['id']}'>" . $catName . "</option>";
 
             if (is_array($cats[$cat['id']])) {
@@ -23,11 +22,12 @@ function build_tree_options($cats, $parent_id)
 <div class="products-controll">
     <form method="post" action="/controllProducts/addOne" enctype="multipart/form-data"
           class="d-block mt-5 w-50 mx-auto">
-
+        <div class="d-flex justify-content-center mb-5">
+          <img class="imagePreview" src="" alt="">
+        </div>
         <div class="form-group">
             <label for="exampleInputFile">Product photo</label>
             <input name="photo" type="file" class="form-control-file">
-            <small class="form-text text-muted">This photo will show all customers</small>
         </div>
 
         <div class="form-group">
@@ -65,4 +65,25 @@ function build_tree_options($cats, $parent_id)
     </form>
 </div>
 
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    var fileInput = document.body.querySelector('input[name=photo]');
+    var imagePreview = document.body.querySelector('.imagePreview');
 
+    fileInput.addEventListener('change', function() {
+        var reader = new FileReader();
+
+        reader.readAsDataURL(fileInput.files[0]);
+
+        reader.onload = function () {
+          console.log(reader.result);
+          imagePreview.src = reader.result;
+          imagePreview.classList.add('show');
+        };
+
+        reader.onerror = function (error) {
+          console.log('Error: ', error);
+        };
+    });
+  });
+</script>

@@ -78,13 +78,14 @@ class ControllProductModel extends Db
 
     public function updateProduct($productData)
     {
-        $stmt = $this->pdo->prepare('UPDATE products SET name = :name, price = :price, category_id = :categoryId 
-            WHERE id = :productId');
-
+        $stmt = $this->pdo->prepare('UPDATE products SET
+          name = :name, price = :price, category_id = :categoryId, status = :status WHERE id = :productId');
+  
         $stmt->bindValue(':name', $productData['name']);
         $stmt->bindValue(':price', $productData['price']);
         $stmt->bindValue(':categoryId', $productData['categoryId']);
         $stmt->bindValue(':productId', $productData['id']);
+        $stmt->bindValue(':status', isset($productData['enabled']) ? 'e' : 'd');
 
         return $stmt->execute();
     }
@@ -115,13 +116,14 @@ class ControllProductModel extends Db
 
     public function getOneProduct($productId)
     {
-        $stmt = $this->pdo->prepare('SELECT 
+        $stmt = $this->pdo->prepare('SELECT
         products.status,
-        products.id, 
+        products.id,
         products.name as name, products.price,
-        categories.name as categoryName, 
+        categories.name as categoryName,
         categories.id as category_id,
-        products.photo
+        products.photo,
+        products.status
         FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.id = ?');
 
         $stmt->execute([$productId]);
