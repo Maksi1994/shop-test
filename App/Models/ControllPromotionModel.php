@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-use App\Starter\Db;
+use App\Tools\Db;
 
 class ControllPromotionModel extends Db {
 

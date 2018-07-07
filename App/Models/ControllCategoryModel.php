@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Starter\Db;
+use App\Tools\Db;
 
 class ControllCategoryModel extends Db
 {

@@ -1,7 +1,6 @@
 <?
 namespace App\Models;
-
-use App\Starter\Db;
+use App\Tools\Db;
 
 class ControllOrderModel extends Db
 {

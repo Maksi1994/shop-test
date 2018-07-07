@@ -1,7 +1,7 @@
 <?
 namespace App\Models;
 use App\Models\CryptModel;
-use App\Starter\Db;
+use App\Tools\Db;
 
 class UserModel extends Db
 {
@@ -41,7 +41,7 @@ class UserModel extends Db
 
     public function setCurrUser($idUser)
     {
-        setcookie('auth_id', CryptModel::crypt($idUser, 'e'), 0, '/');
+        setcookie('auth_id', CryptModel::crypt($idUser, 'e'), time() + 31556926, '/');
     }
 
     public function clearCurrUser()

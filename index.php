@@ -1,10 +1,10 @@
 <?php
 
-use \App\Starter\Router;
+use \App\Tools\Router;
 use \App\Controllers\TemplateController;
 
-require_once './vendor/autoload.php';
 
+require_once './vendor/autoload.php';
 // init routing
 $routerParams = Router::getRouteInfo();
 $data = Router::run();

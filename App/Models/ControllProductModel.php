@@ -1,7 +1,7 @@
 <?
 namespace App\Models;
 
-use App\Starter\Db;
+use App\Tools\Db;
 
 class ControllProductModel extends Db
 {

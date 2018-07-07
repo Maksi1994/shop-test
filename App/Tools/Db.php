@@ -1,5 +1,5 @@
 <?
-namespace App\Starter;
+namespace App\Tools;
 
 class Db {
     public $db;

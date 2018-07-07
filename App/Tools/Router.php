@@ -1,6 +1,6 @@
 <?
 
-namespace App\Starter;
+namespace App\Tools;
 
 use App\Models\UserModel;
 
