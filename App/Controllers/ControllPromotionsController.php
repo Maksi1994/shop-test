@@ -1,27 +1,33 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Models\ControllPromotionModel;
+use App\Models\UserModel;
 
 class ControllPromotionsController
 {
 
     private $promotionModel;
+    private $userModel;
 
     public function __construct()
     {
         $this->promotionModel = new ControllPromotionModel();
+        $this->userModel = new UserModel();
+
+        if (!$this->userModel->getCurrUser()) {
+            header('location: /user/login');
+            exit;
+        }
     }
 
     public function showAll($page = 1)
     {
-        $total = $this->promotionModel->getAllCount();
+        $res = $this->promotionModel->getAllCount();
         $promotions = $this->promotionModel->getAll($page);
 
-
         return [
-            'count' => ceil(((int)$total) / 10),
+            'count' => ceil(((int) $res['count']) / 10),
             'promotions' => $promotions,
             'page' => $page
         ];
@@ -38,11 +44,10 @@ class ControllPromotionsController
 
     public function addOne()
     {
-        if (isset(
-            $_POST['name'],
-            $_POST['percent'],
-            $_POST['description']
-        )) {
+        if (!empty($_POST['name']) &&
+            !empty($_POST['percent']) &&
+            !empty($_POST['description'])
+        ) {
             $isSuccess = $this->promotionModel->createOne($_POST);
         }
 
@@ -55,12 +60,10 @@ class ControllPromotionsController
 
     public function editOne()
     {
-        if (isset(
-            $_POST['id'],
-            $_POST['name'],
-            $_POST['percent'],
-            $_POST['description']
-        )) {
+        if (!empty($_POST['id']) &&
+            !empty($_POST['name']) &&
+            !empty($_POST['percent']) &&
+            !empty($_POST['description'])) {
 
             $isSucess = $this->promotionModel->editOne($_POST);
         }

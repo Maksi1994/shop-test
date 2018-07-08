@@ -45,9 +45,16 @@ class ControllCategoriesController
 
     public function editOne()
     {
-        $this->categoryModel->updateCategory($_POST);
+        if (!empty($_POST['name']) &&
+            !empty($_POST['catId'])) {
+            $isUpdated = $this->categoryModel->updateCategory($_POST);
+        }
 
-        header("location: /controllCategories/showOne/{$_POST['catId']}");
+        if ($isUpdated) {
+            header("location: /controllCategories/showOne/{$_POST['catId']}");
+        } else {
+            header("location: /controllCategories/showOne/{$_POST['catId']}/errorUpdate");
+        }
     }
 
     public function deleteOne($id)
@@ -70,7 +77,9 @@ class ControllCategoriesController
     {
         $isUploaded = $_FILES['photo']['error'] === \UPLOAD_ERR_OK;
 
-        if ($isUploaded && isset($_POST['name'])) {
+        if ($isUploaded &&
+            !empty($_POST['name'])) {
+
             $photoName = time() . $_FILES['photo']['name'];
             $uploadsDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/categories';
 

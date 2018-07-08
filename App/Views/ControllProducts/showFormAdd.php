@@ -55,12 +55,6 @@ function build_tree_options($cats, $parent_id)
                    id="formGroupExampleInput2" placeholder="$">
         </div>
 
-        <div class="form-group">
-            <label for="formGroupExampleInput">Quantity</label>
-            <input required type="number" name="count" value="1" min="0" step="1" class="form-control number"
-                   id="formGroupExampleInput">
-        </div>
-
         <button type="submit" class="btn w-25 mx-auto d-block mt-5 btn-primary">Publish</button>
     </form>
 </div>
@@ -76,7 +70,6 @@ function build_tree_options($cats, $parent_id)
         reader.readAsDataURL(fileInput.files[0]);
 
         reader.onload = function () {
-          console.log(reader.result);
           imagePreview.src = reader.result;
           imagePreview.classList.add('show');
         };

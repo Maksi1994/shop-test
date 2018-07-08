@@ -15,7 +15,9 @@ class ControllPromotionModel extends Db {
     public function getOne($id) {
         $stmt = $this->pdo->prepare('SELECT * FROM promotions WHERE id = ?');
 
-        return $stmt->execute([$id]);
+        $stmt->execute([$id]);
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function getAll($page) {
@@ -34,21 +36,17 @@ class ControllPromotionModel extends Db {
     public function createOne($data) {
         $stmt = $this->pdo->prepare('INSERT INTO promotions (name, description, percent) VALUES (:name, :description, :percent)');
 
-        var_dump($data);
-
         $stmt->bindValue(':name', $data['name']);
         $stmt->bindValue(':description', $data['description']);
         $stmt->bindValue(':percent', $data['percent'], \PDO::PARAM_INT);
 
-        $stmt->execute();
-
-        var_dump($stmt->errorInfo());
-        exit;
+        return $stmt->execute();
     }
 
     public function editOne($data) {
-        $stmt = $this->pdo->prepare('UPDATE promotion SET name: = name, percent = :percent, description = :description');
+        $stmt = $this->pdo->prepare('UPDATE promotions SET name = :name, percent = :percent, description = :description WHERE id = :id');
 
+        $stmt->bindValue(':id', $data['id']);
         $stmt->bindValue(':name', $data['name']);
         $stmt->bindValue(':percent', $data['percent']);
         $stmt->bindValue(':description', $data['description']);

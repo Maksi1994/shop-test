@@ -51,13 +51,9 @@ function build_tree($cats, $parent_id, $catId)
 
 
             <div class=" w-100 form-group">
-                <label for="exampleFormControlSelect1 w-100">Has Parent</label>
-                <input type="checkbox"
-                       name="hasParent"
-                       class="form-check-input check-parent ml-5"
-                    <?=self::$data['category']['parent_id'] != 0 ? 'checked' : ''?>
-                >
+                <label for="exampleFormControlInput1">Parent</label>
                 <select class="form-control" name="parentId">
+                    <option <?=(!empty(self::$data['category']['parent_id']) ? '' : 'selected')?>></option>
                     <?=build_tree_options(self::$data['possibleParents'], 0, self::$data['category']['parent_id'])?>
                 </select>
             </div>

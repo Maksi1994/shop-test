@@ -57,8 +57,8 @@ class ControllCategoryModel extends Db
         $stmt->bindValue(':parent_id', 0);
         $stmt->bindValue(':catId', $data['catId']);
 
-        if (isset($data['hasParnt'])) {
-            $stmt->bindValue(':parent_id', $data['parent_id']);
+        if (!empty($data['parentId'])) {
+            $stmt->bindValue(':parent_id', $data['parentId']);
         }
 
         return $stmt->execute();

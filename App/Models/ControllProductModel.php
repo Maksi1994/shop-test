@@ -1,4 +1,5 @@
 <?
+
 namespace App\Models;
 
 use App\Tools\Db;
@@ -63,29 +64,42 @@ class ControllProductModel extends Db
     public function addOne($data)
     {
         $stmt = $this->pdo->prepare('INSERT INTO products
-      (name, photo, description, price, count, category_id)
-      VALUES (:name, :photo, :description, :price, :count, :category_id)');
+      (name, photo, description, price, category_id)
+      VALUES (:name, :photo, :description, :price, :category_id)');
 
         $stmt->bindValue(':name', $data['name']);
         $stmt->bindValue(':photo', $data['photo']);
         $stmt->bindValue(':description', $data['description']);
         $stmt->bindValue(':price', $data['price']);
-        $stmt->bindValue(':count', $data['count']);
-        $stmt->bindValue(':category_id', $data['category_id'], \PDO::PARAM_INT);
+        $stmt->bindValue(':category_id', null);
+
+        if (isset($data['category_id'])) {
+            $stmt->bindValue(':category_id',$data['category_id'] , \PDO::PARAM_INT);
+        }
 
         return $stmt->execute();
     }
 
     public function updateProduct($productData)
     {
-        $stmt = $this->pdo->prepare('UPDATE products SET
-          name = :name, price = :price, category_id = :categoryId, status = :status WHERE id = :productId');
-  
+        $stmt = $this->pdo->prepare('UPDATE products SET 
+        name = :name, 
+        price = :price, 
+        category_id = :categoryId, 
+        status = :status,
+        description = :description
+        WHERE id = :productId');
+
         $stmt->bindValue(':name', $productData['name']);
+        $stmt->bindValue(':description', $productData['description']);
         $stmt->bindValue(':price', $productData['price']);
-        $stmt->bindValue(':categoryId', $productData['categoryId']);
+        $stmt->bindValue(':categoryId', null);
         $stmt->bindValue(':productId', $productData['id']);
         $stmt->bindValue(':status', isset($productData['enabled']) ? 'e' : 'd');
+
+        if (!empty($productData['categoryId'])) {
+            $stmt->bindValue(':categoryId', $productData['categoryId'] , \PDO::PARAM_INT);
+        }
 
         return $stmt->execute();
     }
@@ -120,6 +134,7 @@ class ControllProductModel extends Db
         products.status,
         products.id,
         products.name as name, products.price,
+        products.description,
         categories.name as categoryName,
         categories.id as category_id,
         products.photo,
@@ -156,7 +171,8 @@ class ControllProductModel extends Db
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function toggleStatus($id) {
+    public function toggleStatus($id)
+    {
         $stmt = $this->pdo->prepare("UPDATE products SET status = IF(status='e', 'd', 'e') WHERE id = ?");
 
         return $stmt->execute([$id]);

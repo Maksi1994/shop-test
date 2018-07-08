@@ -1,4 +1,5 @@
 <?
+
 namespace App\Controllers;
 
 use App\Models\ControllCategoryModel;
@@ -7,8 +8,8 @@ use App\Models\UserModel;
 
 class ControllProductsController
 {
-    private  $productModel;
-    private  $categoryModel;
+    private $productModel;
+    private $categoryModel;
     private $userModel;
 
     function __construct()
@@ -24,23 +25,22 @@ class ControllProductsController
 
     }
 
-    public function showAll($page = 1, $cat = 'all')
+    public function showAll($page = 1)
     {
-        $list = $this->productModel->getAllProducts($cat, $page);
-        $count = $this->productModel->getCountProducts($cat);
+        $list = $this->productModel->getAllProducts('all', $page);
+        $res = $this->productModel->getCountProducts('all');
 
         return [
             'list' => $list,
             'page' => $page,
-            'cat' => $cat,
-            'count' => ceil(((int) $count) / 10),
+            'count' => ceil(((int) $res['count']) / 10),
         ];
     }
 
     public function showOne($id)
     {
         $product = $this->productModel->getOneProduct($id);
-        $allCategories = $this->categoryModel ->getAllCategories();
+        $allCategories = $this->categoryModel->getAllCategories();
         $promotionsIds = array_column($this->productModel->getPromotions($id), 'id');
 
         $product['promotions'] = $this->productModel->getPromotions($id);
@@ -79,8 +79,14 @@ class ControllProductsController
             }
         }
 
-        $updatedProduct = $this->productModel->updateProduct($_POST);
-        $updatedProductPromotions = $this->productModel->setProductPromotions($_POST['id'], $activePromotions);
+        if (!empty($_POST['id']) &&
+            !empty($_POST['name']) &&
+            !empty($_POST['description']) &&
+            !empty($_POST['price'])
+        ) {
+            $updatedProduct = $this->productModel->updateProduct($_POST);
+            $updatedProductPromotions = $this->productModel->setProductPromotions($_POST['id'], $activePromotions);
+        }
 
         if ($updatedProduct && $updatedProductPromotions) {
             header('location: /controllProducts/showOne/' . $_POST['id']);
@@ -93,17 +99,15 @@ class ControllProductsController
     {
         $isUploaded = $_FILES['photo']['error'] === \UPLOAD_ERR_OK;
 
-        if ($isUploaded && isset($_POST['name'],
-                $_POST['description'],
-                $_POST['category_id'],
-                $_POST['price'],
-                $_POST['count']
-            )) {
+        if ($isUploaded &&
+            !empty($_POST['name']) &&
+            !empty($_POST['description']) &&
+            !empty($_POST['price'])
+        ) {
 
             $photoName = time() . $_FILES['photo']['name'];
             $uploadsDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/products';
             $isSavedPhoto = move_uploaded_file($_FILES['photo']['tmp_name'], "$uploadsDir/$photoName");
-            $category = $this->categoryModel->getOneCategory($_POST['category_id']);
 
             $_POST['photo'] = $photoName;
 
@@ -113,9 +117,9 @@ class ControllProductsController
         }
 
         if ($isSavedPhoto && $isSavedData) {
-            header("location: /controllProducts/showAll/{$category['name']}");
+            header("location: /controllProducts/showAll");
         } else {
-            header("location: /controllProducts/showFormAdd/");
+            header("location: /controllProducts/showFormAdd");
         }
     }
 

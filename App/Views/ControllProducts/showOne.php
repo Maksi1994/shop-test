@@ -49,13 +49,18 @@ function build_tree_options($cats, $parent_id, $catId)
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Category</label>
                     <select name="categoryId" class="form-control" id="exampleFormControlSelect1">
-                        <option value <?=(isset(self::$data['product']['category_id']) ? '' : 'selected')?>></option>
+                        <option <?=(isset(self::$data['product']['category_id']) ? '' : 'selected')?>></option>
                         <?=build_tree_options(self::$data['allCategories'], 0, self::$data['product']['category_id'])?>
                     </select>
                 </div>
                 <div class="form-group mt-5 pl-4">
                     <label for="m-0 exampleFormControlSelect2 font-weight-bold">Enabled Status</label>
                     <input class="ml-3" type="checkbox" <?=(self::$data['product']['status'] === 'e') ? 'checked' : ''?> name="enabled">
+                </div>
+
+                <div class="form-group w-100">
+                    <label for="exampleTextarea">Description</label>
+                    <textarea required class="form-control" placeholder=".." name="description" id="exampleTextarea" rows="3"><?=self::$data['product']['description']?></textarea>
                 </div>
 
                 <div class="form-group mt-5">
@@ -78,13 +83,6 @@ function build_tree_options($cats, $parent_id, $catId)
                     <button class="mt-5 w-100 btn-lg btn btn-success">Save</button>
                 </div>
             </form>
-        </div>
-        <div class="row">
-            <? if (!empty(self::$data['errorMessage'])) { ?>
-                <div class="alert alert-danger w-100" role="alert">
-                    <?= self::$data['errorMessage'] ?>
-                </div>
-            <? } ?>
         </div>
     </div>
 </section>

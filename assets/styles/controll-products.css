@@ -2,6 +2,8 @@
     width: 50px;
     height: 50px;
     display: inline-block;
+    object-fit: contain;
+    user-select: none;
 }
 
 .products-controll .product-edit-img {

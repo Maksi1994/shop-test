@@ -2,7 +2,7 @@
     <table class="table table-sm">
         <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">№</th>
             <th scope="col">Name</th>
             <th scope="col">Photo</th>
             <th scope="col">Description</th>
@@ -13,7 +13,7 @@
         <tbody>
         <? foreach (self::$data['list'] as $listIndex => $item) { ?>
             <tr class="<?=$item['status'] == 'e' ? '' : 'table-dark'?>">
-                <td><?= $listIndex ?></td>
+                <td><?= ((self::$data['page'] - 1) * 10) + ($listIndex + 1) ?></td>
                 <td><?= $item['name'] ?></td>
                 <td>
                     <img class="product-image" src="<?= "/assets/images/products/" . $item['photo'] ?>" alt="">
@@ -41,9 +41,9 @@
                 </li>
             <? } ?>
 
-            <? for ($i = 0; $i < self::$data['count']; $i++) { ?>
-                <li class="page-item"><a class="page-link"
-                                         href="/controllProducts/showAll/<?= $i + 1 ?>"><?= $i + 1 ?></a>
+            <? for ($i = 1; $i <= self::$data['count']; $i++) { ?>
+                <li class="page-item <?=self::$data['page'] == $i ? 'active' : ''?>"><a class="page-link"
+                                         href="/controllProducts/showAll/<?= $i ?>"><?= $i ?></a>
                 </li>
             <? } ?>
 

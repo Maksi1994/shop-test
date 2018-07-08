@@ -36,9 +36,9 @@
                 </li>
             <? } ?>
 
-            <? for ($i = 0; $i < self::$data['count']; $i++) { ?>
-                <li class="page-item"><a class="page-link"
-                                         href="/controllPromotions/showAll/<?= $i + 1 ?>"><?= $i + 1 ?></a>
+            <? for ($i = 1; $i <= self::$data['count']; $i++) { ?>
+                <li class="page-item">
+                    <a class="page-link <?= self::$data['page'] === $i ? 'active' : ''?>" href="/controllPromotions/showAll/<?= $i ?>"><?= $i ?></a>
                 </li>
             <? } ?>
 

@@ -1,3 +1,7 @@
+.header-controll-panel {
+ user-select: none;
+}
+
 .header-controll-panel .logo {
     width: 50px;
 }

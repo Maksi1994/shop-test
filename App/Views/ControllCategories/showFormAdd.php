@@ -39,35 +39,36 @@ function build_tree_options($cats, $parent_id)
             <input type="text" name="name" required class="form-control" id="formGroupExampleInput"
                    placeholder="Name..">
         </div>
-
-        <select class="form-control" name="parent_id">
-            <option disabled selected value></option>
-            <?= build_tree_options(self::$data['allCategrories'], 0) ?>
-        </select>
+        <div class="form-group">
+            <label for="formGroupExampleInput">Parent</label>
+            <select class="form-control" name="parent_id">
+                <option disabled selected value></option>
+                <?= build_tree_options(self::$data['allCategrories'], 0) ?>
+            </select>
+        </div>
 
         <button type="submit" class="btn w-25 mx-auto d-block mt-5 btn-primary">Save</button>
     </form>
 </div>
 
 <script type="text/javascript">
-  document.addEventListener('DOMContentLoaded', function() {
-    var fileInput = document.body.querySelector('input[name=photo]');
-    var imagePreview = document.body.querySelector('.imagePreview');
+    document.addEventListener('DOMContentLoaded', function () {
+        var fileInput = document.body.querySelector('input[name=photo]');
+        var imagePreview = document.body.querySelector('.imagePreview');
 
-    fileInput.addEventListener('change', function() {
-        var reader = new FileReader();
+        fileInput.addEventListener('change', function () {
+            var reader = new FileReader();
 
-        reader.readAsDataURL(fileInput.files[0]);
+            reader.readAsDataURL(fileInput.files[0]);
 
-        reader.onload = function () {
-          console.log(reader.result);
-          imagePreview.src = reader.result;
-          imagePreview.classList.add('show');
-        };
+            reader.onload = function () {
+                imagePreview.src = reader.result;
+                imagePreview.classList.add('show');
+            };
 
-        reader.onerror = function (error) {
-          console.log('Error: ', error);
-        };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+            };
+        });
     });
-  });
 </script>

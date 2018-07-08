@@ -9,13 +9,6 @@
     margin-top: 7px;
 }
 
-.controll-categories .check-parent + select {
-    pointer-events: none;
-}
-
-.controll-categories .check-parent:checked + select {
-    pointer-events: auto;
-}
 
 .controll-categories .edition-form {
     height: 420px;
