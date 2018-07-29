@@ -72,4 +72,15 @@ class ControllCategoryModel extends Db
         return $stmt->execute();
     }
 
+    public function getCategoriesIcons()
+    {
+        $path = "{$_SERVER['DOCUMENT_ROOT']}/assets/icons/categories";
+
+        $imgs = array_filter(scandir($path), function ($fileName) {
+            return $fileName !== '.' && $fileName !== '..';
+        });
+
+        return $imgs;
+    }
+
 }

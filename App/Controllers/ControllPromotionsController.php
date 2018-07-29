@@ -22,7 +22,7 @@ class ControllPromotionsController
     }
 
     public function showAll($page = 1)
-    {
+    { 
         $res = $this->promotionModel->getAllCount();
         $promotions = $this->promotionModel->getAll($page);
 

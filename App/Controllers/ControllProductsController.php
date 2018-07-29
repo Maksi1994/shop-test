@@ -29,7 +29,7 @@ class ControllProductsController
     {
         $list = $this->productModel->getAllProducts('all', $page);
         $res = $this->productModel->getCountProducts('all');
-
+        
         return [
             'list' => $list,
             'page' => $page,

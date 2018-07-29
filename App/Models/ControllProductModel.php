@@ -33,6 +33,7 @@ class ControllProductModel extends Db
         if ($catName !== 'all') {
             $sql = $sql . " WHERE categories.name = :catName";
         }
+       
         $sql = $sql . " ORDER BY products.ts LIMIT :limit OFFSET :offset";
 
         $stmt = $this->pdo->prepare($sql);

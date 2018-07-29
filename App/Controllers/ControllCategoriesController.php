@@ -67,9 +67,11 @@ class ControllCategoriesController
     public function showFormAdd()
     {
         $allCategrories = $this->categoryModel->getAllCategories();
+        $icons  = $this->categoryModel->getCategoriesIcons();
 
         return [
-            'allCategrories' => $allCategrories
+            'allCategrories' => $allCategrories,
+            'icons' => $icons
         ];
     }
 
