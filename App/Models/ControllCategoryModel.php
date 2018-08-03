@@ -20,7 +20,7 @@ class ControllCategoryModel extends Db
 
         $stmt->bindValue(':name', $data['name']);
         $stmt->bindValue(':parent_id', ($data['parent_id'] ?? $data['default_parent_id']));
-        $stmt->bindValue(':photo', $data['photo']);
+        $stmt->bindValue(':photo', $data['photoName']);
 
         return $stmt->execute();
     }

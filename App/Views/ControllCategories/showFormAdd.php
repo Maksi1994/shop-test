@@ -32,6 +32,7 @@ function build_tree_options($cats, $parent_id)
         </div>
 
         <input name="default_parent_id" value="0" type="hidden">
+        <input class='photo-name-hidden' name="photoName" value="" type="hidden">
 
         <div class="form-group">
             <label for="formGroupExampleInput">Name</label>
@@ -50,44 +51,65 @@ function build_tree_options($cats, $parent_id)
     </form>
 </div>
 
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade modal-categories-icon-select" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body modal">
+                <div class="imgs-row">
+                     <? foreach(self::$data['icons'] as $icon)  {?>
+                        <div class="item">
+                            <img class="cat-icon" 
+                                 alt='<?=$icon?>'
+                                 src='<?="/assets/icons/categories/$icon"?>'> 
+                        </div>
+                        <?}?>
+                </div>
+                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary save-icon-btn" data-dismiss="modal">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        var fileInput = document.body.querySelector('input[name=photo]');
-        var imagePreview = document.body.querySelector('.imagePreview');
-
-        fileInput.addEventListener('change', function () {
-            var reader = new FileReader();
-
-            reader.readAsDataURL(fileInput.files[0]);
-
-            reader.onload = function () {
-                imagePreview.src = reader.result;
-                imagePreview.classList.add('show');
-            };
-
-            reader.onerror = function (error) {
-                console.log('Error: ', error);
-            };
-        });
+    document.addEventListener('DOMContentLoaded', function () { 
+       let selectedImg;
+        
+       document.body.addEventListener('click', (e) => {
+           selectHandle(e);
+           saveSelected(e);
+       });
+        
+        
+       function selectHandle(event) {
+            const t = event.target;
+           
+           if (t.classList.contains('cat-icon') && !t.classList.contains('selected')) {
+                   const currSelected = document.body.querySelector('.selected');
+            
+                   if (currSelected) {
+                       currSelected.classList.remove('selected');
+                   } 
+               
+                   selectedImg = t.alt;
+                   t.classList.add('selected');
+           }
+        }
+        
+       function saveSelected(event) {
+            if (event.target.classList.contains('save-icon-btn')) {
+                  const hiddenIconField = document.body.querySelector('.photo-name-hidden');
+            
+                  hiddenIconField.value = selectedImg;
+            }
+        }
     });
 </script>

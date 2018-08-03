@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Models\ControllCategoryModel;
@@ -77,23 +76,17 @@ class ControllCategoriesController
 
     public function addCategory()
     {
-        $isUploaded = $_FILES['photo']['error'] === \UPLOAD_ERR_OK;
-
-        if ($isUploaded &&
+        if (!empty($_POST['photoName']) &&
             !empty($_POST['name'])) {
-
-            $photoName = time() . $_FILES['photo']['name'];
-            $uploadsDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/categories';
-
-            $isUploadedPhoto = move_uploaded_file($_FILES['photo']['tmp_name'], "$uploadsDir/$photoName");
-
-            if ($isUploadedPhoto) {
-                $_POST['photo'] = $photoName;
-                $isSavedData = $this->categoryModel->addCategory($_POST);
+            $allIcons = $this->categoryModel->getCategoriesIcons();            
+            $isValidPhoto = in_array($_POST['photoName'], $allIcons);
+            
+            if ($isValidPhoto) {
+                 $isSuccess = $this->categoryModel->addCategory($_POST);
             }
         }
 
-        if ($isUploadedPhoto && $isSavedData) {
+        if ($isSuccess) {
             header('location: /controllCategories/showAll');
         } else {
             header('location: /controllCategories/showFormAdd');

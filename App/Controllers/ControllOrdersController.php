@@ -19,6 +19,21 @@ class ControllOrdersController
             exit;
         }
     }
+    
+    public function addOne() {
+        if (!empty('customer_name') &&
+           !empty('customer_email')
+           !empty('status')) {
+            $orderId = $this->orderModel->saveOrder($_POST);
+            
+            if ($orderId !== false) {
+                $_POST['orderId'];
+                $this->orderModel->saveOrder($_POST);
+            }
+        }
+        
+        echo "{success: $isSuccess}";
+    }
 
     public function showAll($page = 1)
     {

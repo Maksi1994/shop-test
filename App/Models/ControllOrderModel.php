@@ -10,6 +10,56 @@ class ControllOrderModel extends Db
     {
         $this->pdo = $this->connectDb();
     }
+    
+    public function insertProductsToOrder($data) {
+        $sqlOrderProducts = 'INSERT INTO products_orders 
+        (product_id, order_id, count, price_for_one) VALUES';
+        $products = [];
+        
+        foreach (array_keys($data) as $index => $val) {
+            if (strpos('[product=',$val) === 0) {
+                $productId = preg_replace('/\D/', '', $val);
+                $sqlOrderProducts.="(:product_id$index, :order_id$index, :price_for_one$index)";
+                
+                if (count(array_keys($data)) > $index) {
+                    $sqlOrderProducts.=","
+                } 
+                
+                $products[] = [
+                    'product_id' => $productId,
+                    'count' => $data["[count=$productId]"],
+                    'price_for_one' => $data["[price_for_one=$productId]"],
+                    'order_id' => $data['orderId']
+                       ];
+                }
+        }
+        
+        $productsOrderStmt = $this->pdo->prepare($sqlOrderProducts);
+        
+        foreach ($products as $index => $product) {
+            $productsOrderStmt->bindValue(":product_id$index",  $product['product_id']);
+            $productsOrderStmt->bindValue(":order_id$index",  $product['order_id']);
+            $productsOrderStmt->bindValue(":price_for_one$index",  $product['price_for_one']);
+            $productsOrderStmt->bindValue(":count$index",  $product['count']);
+        }
+        
+        return $productsOrderStmt->execute();
+    }
+    
+    
+    public function saveOrder($data) {
+        $stmtOrder = $this->pdo->prepare('INSERT INTO orders 
+        (customer_name, customer_email, status) VALUES
+        (:customer_name, :customer_email, :status)');
+        
+        $stmtOrder->bindValue(':customer_name', $data['customer_name']);
+        $stmtOrder->bindValue(':customer_email', $data['customer_email']);
+        $stmtOrder->bindValue(':status', $data['status']);
+        
+        $isSuccess = $stmt->execute();
+        
+        return $isSuccess ? $this->pdo->lastInsertId() : false;
+    }
 
     public function getAll($page)
     {

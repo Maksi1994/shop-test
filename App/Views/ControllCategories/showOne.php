@@ -23,10 +23,13 @@ function build_tree_options($cats, $parent_id, $catId)
 function build_tree($cats, $parent_id, $catId)
 {
     if (is_array($cats) and isset($cats[$parent_id])) {
-        $tree = '<ul class="m-0 d-table ml-auto">';
+        $tree = '<ul class="m-0 d-table ml-auto categories-tree">';
         foreach ($cats[$parent_id] as $cat) {
             $btnStyle = $cat['id'] === $catId ? 'btn-warning text-white' : 'btn-primary';
-            $tree .= "<li> <a href='/controllCategories/showOne/{$cat['id']}' class='btn  mb-2 active $btnStyle' role='button' aria-pressed='true'>{$cat['name']}</a>";
+            $tree .= "<li class='item'> 
+            <img class='icon' src='/assets/icons/categories/{$cat['photo']}'>
+            <a href='/controllCategories/showOne/{$cat['id']}' class='btn  mb-2 
+            active $btnStyle' role='button' aria-pressed='true'>{$cat['name']}</a>";
             $tree .= build_tree($cats, $cat['id'], $catId);
 
             $tree .= '</li>';
@@ -37,7 +40,6 @@ function build_tree($cats, $parent_id, $catId)
 
     return $tree;
 }
-
 ?>
 <div class="container controll-categories x-auto mt-5">
     <div class="row edition-form">
