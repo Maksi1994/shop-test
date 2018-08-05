@@ -11,7 +11,7 @@
         </thead>
         <? foreach (self::$data['promotions'] as $index => $promotion) { ?>
             <tr>
-                <td><?=$index?></td>
+                <td><?= ((self::$data['page'] - 1) * 10) + ($index + 1)?></td>
                 <td><?= $promotion['percent'] ?></td>
                 <td><?= $promotion['name'] ?></td>
                 <td><?= $promotion['description'] ?></td>
