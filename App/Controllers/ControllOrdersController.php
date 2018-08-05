@@ -15,24 +15,26 @@ class ControllOrdersController
         $this->userModel = new UserModel();
 
         if (!$this->userModel->getCurrUser()) {
-            header('location: /user/login');
-            exit;
+           header('location: /user/login');
+           exit;
         }
     }
-    
-    public function addOne() {
+
+    public function addOne()
+    {
         if (!empty('customer_name') &&
-           !empty('customer_email')
-           !empty('status')) {
+            !empty('customer_email') &&
+            !empty('status')) {
+
             $orderId = $this->orderModel->saveOrder($_POST);
-            
+
             if ($orderId !== false) {
-                $_POST['orderId'];
-                $this->orderModel->saveOrder($_POST);
+                $_POST['orderId'] = $orderId;
+                $isSuccess = $this->orderModel->insertProductsToOrder($_POST);
             }
         }
-        
-        echo "{success: $isSuccess}";
+
+        echo json_encode(['success' => $isSuccess == 1]);
     }
 
     public function showAll($page = 1)
@@ -43,7 +45,7 @@ class ControllOrdersController
         return [
             'list' => $list,
             'page' => $page,
-            'count' => $count
+            'count' => ceil(((int) $count) / 10)
         ];
     }
 

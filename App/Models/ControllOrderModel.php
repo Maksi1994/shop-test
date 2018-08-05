@@ -1,5 +1,7 @@
 <?
+
 namespace App\Models;
+
 use App\Tools\Db;
 
 class ControllOrderModel extends Db
@@ -10,54 +12,56 @@ class ControllOrderModel extends Db
     {
         $this->pdo = $this->connectDb();
     }
-    
-    public function insertProductsToOrder($data) {
-        $sqlOrderProducts = 'INSERT INTO products_orders 
-        (product_id, order_id, count, price_for_one) VALUES';
+
+    public function insertProductsToOrder($data)
+    {
+        $sqlOrderProducts = 'INSERT INTO products_orders (product_id, order_id, count, price_for_one) VALUES';
+        $product_ids = [];
         $products = [];
-        
-        foreach (array_keys($data) as $index => $val) {
-            if (strpos('[product=',$val) === 0) {
-                $productId = preg_replace('/\D/', '', $val);
-                $sqlOrderProducts.="(:product_id$index, :order_id$index, :price_for_one$index)";
-                
-                if (count(array_keys($data)) > $index) {
-                    $sqlOrderProducts.=","
-                } 
-                
-                $products[] = [
-                    'product_id' => $productId,
-                    'count' => $data["[count=$productId]"],
-                    'price_for_one' => $data["[price_for_one=$productId]"],
-                    'order_id' => $data['orderId']
-                       ];
+
+        foreach (array_keys($data) as $key) {
+            if (strpos($key, 'product_id') !== false) {
+                $product_ids[] = $data[$key];
+            }
+        }
+
+        foreach ($product_ids as $index => $id) {
+                $sqlOrderProducts .= "(:product_id$index, :order_id, :count$index, (SELECT price FROM products WHERE id = :product_id$index))";
+
+                if ((count($product_ids) - 1) > $index) {
+                    $sqlOrderProducts .= ",";
                 }
+
+                $products[] = [
+                    'product_id' => $id,
+                    'count' => $data["count=$id"]
+                ];
         }
-        
+
         $productsOrderStmt = $this->pdo->prepare($sqlOrderProducts);
-        
+        $productsOrderStmt->bindValue(":order_id", $data['orderId'], \PDO::PARAM_INT);
+
         foreach ($products as $index => $product) {
-            $productsOrderStmt->bindValue(":product_id$index",  $product['product_id']);
-            $productsOrderStmt->bindValue(":order_id$index",  $product['order_id']);
-            $productsOrderStmt->bindValue(":price_for_one$index",  $product['price_for_one']);
-            $productsOrderStmt->bindValue(":count$index",  $product['count']);
+            $productsOrderStmt->bindValue(":product_id$index", $product['product_id'], \PDO::PARAM_INT);
+            $productsOrderStmt->bindValue(":count$index", $product['count'], \PDO::PARAM_INT);
         }
-        
+
         return $productsOrderStmt->execute();
     }
-    
-    
-    public function saveOrder($data) {
+
+
+    public function saveOrder($data)
+    {
         $stmtOrder = $this->pdo->prepare('INSERT INTO orders 
         (customer_name, customer_email, status) VALUES
         (:customer_name, :customer_email, :status)');
-        
+
         $stmtOrder->bindValue(':customer_name', $data['customer_name']);
         $stmtOrder->bindValue(':customer_email', $data['customer_email']);
         $stmtOrder->bindValue(':status', $data['status']);
-        
-        $isSuccess = $stmt->execute();
-        
+
+        $isSuccess = $stmtOrder->execute();
+
         return $isSuccess ? $this->pdo->lastInsertId() : false;
     }
 
@@ -138,12 +142,10 @@ class ControllOrderModel extends Db
     public function updateOne($orderData)
     {
         $stmt = $this->pdo->prepare('UPDATE orders SET 
-        customer_name = :customer_name, 
         customer_email = :customer_email,
         status = :status
         WHERE orders.id = :order_id');
 
-        $stmt->bindValue('customer_name', $orderData['customer_name']);
         $stmt->bindValue('customer_email', $orderData['customer_email']);
         $stmt->bindValue('status', $orderData['status']);
         $stmt->bindValue('order_id', $orderData['id']);
@@ -151,7 +153,8 @@ class ControllOrderModel extends Db
         return $stmt->execute();
     }
 
-    public function setOrderProducts($orderId, $arrayProducts) {
+    public function setOrderProducts($orderId, $arrayProducts)
+    {
         $sqlUpdate = "DELETE FROM products_orders WHERE order_id = :order_id; INSERT INTO products_orders (product_id, order_id, count, price_for_one) VALUES";
 
         foreach ($arrayProducts as $key => $productItem) {
@@ -175,11 +178,15 @@ class ControllOrderModel extends Db
         return $stmtUpdate->execute();
     }
 
-    public function getCount() {
-        return $this->pdo->query('SELECT COUNT(id) as count FROM orders')->fetchAll(\PDO::FETCH_ASSOC);
+    public function getCount()
+    {
+        $res = $this->pdo->query('SELECT COUNT(id) as count FROM orders')->fetch(\PDO::FETCH_NUM);
+
+        return $res[0];
     }
 
-    public function getOrderProducts($orderId) {
+    public function getOrderProducts($orderId)
+    {
         $stmt = $this->pdo->prepare('SELECT 
             products.id,
             products.photo,  

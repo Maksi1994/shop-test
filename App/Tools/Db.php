@@ -15,7 +15,7 @@ class Db {
             $user = $p['LOGIN'];
             $password = $p['PASSWORD'];
 
-            $this->db = new \PDO("mysql:host=" . $host . ";dbname=" . $dbName, $user, $password, [\PDO::ATTR_PERSISTENT => true]);
+            $this->db = new \PDO("mysql:host=" . $host . ";dbname=" . $dbName, $user, $password);
         }
         return $this->db;
 

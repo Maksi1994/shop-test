@@ -15,7 +15,7 @@
         <tbody>
         <?foreach (self::$data['list'] as $listIndex => $item) {?>
             <tr>
-                <td><?=$listIndex?></td>
+                <td><?=(self::$data['page'] - 1) > 0 ? ((self::$data['page'] - 1) * 10) + ++$listIndex : ++$listIndex?></td>
                 <td><?=date('D, d M Y H:i', $item['ts_create'])?></td>
                 <td><?=$item['curr_status']?></td>
                 <td><?=$item['customer_name']?></td>
@@ -37,7 +37,7 @@
         <ul class="pagination justify-content-center">
             <? if ((int)self::$data['page'] - 1 > 0) { ?>
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
+                    <a class="page-link" href="/controllOrders/showAll/<?= self::$data['page'] - 1 ?>" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
                     </a>
@@ -45,14 +45,14 @@
             <? } ?>
 
             <? for ($i = 0; $i < (int)self::$data['count']; $i++) { ?>
-                <li class="page-item"><a class="page-link"
-                                         href="/controllProducts/showAll/<?= $i + 1 ?>"><?= $i + 1 ?></a>
+                <li class="page-item <?=self::$data['page'] == ($i + 1)  ? 'active' : ''?>">
+                    <a class="page-link"  href="/controllOrders/showAll/<?= $i + 1 ?>"><?= $i + 1 ?></a>
                 </li>
             <? } ?>
 
             <? if ((int)self::$data['page'] < (int)self::$data['count']) { ?>
                 <li class="page-item">
-                    <a class="page-link" href="/controllProducts/showAll/<?= self::$data['page'] + 1 ?>"
+                    <a class="page-link" href="/controllOrders/showAll/<?= self::$data['page'] + 1 ?>"
                        aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>

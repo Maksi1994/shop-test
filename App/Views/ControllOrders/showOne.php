@@ -12,10 +12,7 @@
                 <input type="hidden" name="id" value="<?= self::$data['order_id'] ?>" class="form-control">
 
                 <div class="form-group">
-                    <label for="exampleFormControlInput1">Customer Name</label>
-                    <input type="text" name="customer_name" value="<?= self::$data['customer_name'] ?>" class="form-control"
-                           id="exampleFormControlInput1"
-                           placeholder="name@example.com">
+                    <p>Customer Name: <?= self::$data['customer_name'] ?></p>
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlInput1">Customer Email</label>

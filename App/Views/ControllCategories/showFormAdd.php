@@ -25,8 +25,8 @@ function build_tree_options($cats, $parent_id)
 
 
         <div class="form-group">
-            <label class="d-block w-100 mb-2" for="exampleInputFile">Choose categoty photo</label>
-            <button type="button w-100" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+            <label class="d-block icon-choicer w-100 mb-2" for="exampleInputFile">Choose categoty photo</label>
+            <button type="button w-100" class="btn btn-primary icon-choicer-btn" data-toggle="modal" data-target="#exampleModalLong">
                 Select
             </button>
         </div>
@@ -73,19 +73,19 @@ function build_tree_options($cats, $parent_id)
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary save-icon-btn" data-dismiss="modal">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () { 
+    document.addEventListener('DOMContentLoaded', function () {
+       const iconChoicerStatus  = document.body.querySelector('.icon-choicer');
+       const iconChoicerBtn  = document.body.querySelector('.icon-choicer-btn');
        let selectedImg;
         
        document.body.addEventListener('click', (e) => {
            selectHandle(e);
-           saveSelected(e);
        });
         
         
@@ -94,22 +94,18 @@ function build_tree_options($cats, $parent_id)
            
            if (t.classList.contains('cat-icon') && !t.classList.contains('selected')) {
                    const currSelected = document.body.querySelector('.selected');
+                   const hiddenIconField = document.body.querySelector('.photo-name-hidden');
             
                    if (currSelected) {
                        currSelected.classList.remove('selected');
-                   } 
-               
-                   selectedImg = t.alt;
+                   }
+
                    t.classList.add('selected');
+                   iconChoicerStatus.innerHTML = '';
+                   iconChoicerBtn.classList.add('btn-success');
+                   iconChoicerBtn.innerHTML = 'Chosen';
+                   hiddenIconField.value = t.alt;
            }
-        }
-        
-       function saveSelected(event) {
-            if (event.target.classList.contains('save-icon-btn')) {
-                  const hiddenIconField = document.body.querySelector('.photo-name-hidden');
-            
-                  hiddenIconField.value = selectedImg;
-            }
         }
     });
 </script>

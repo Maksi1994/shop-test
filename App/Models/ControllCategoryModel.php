@@ -75,12 +75,14 @@ class ControllCategoryModel extends Db
     public function getCategoriesIcons()
     {
         $path = "{$_SERVER['DOCUMENT_ROOT']}/assets/icons/categories";
+        $allCatImages = $this->pdo->query('SELECT photo FROM categories')->fetchAll(\PDO::FETCH_ASSOC);
+        $usedCatsImages = array_map(function($cat) {
+            return $cat['photo'];
+        }, $allCatImages);
 
-        $imgs = array_filter(scandir($path), function ($fileName) {
-            return $fileName !== '.' && $fileName !== '..';
+        return array_filter(scandir($path), function ($fileName) use ($usedCatsImages) {
+            return $fileName !== '.' && $fileName !== '..' && array_search($fileName, $usedCatsImages) === false;
         });
-
-        return $imgs;
     }
 
 }
