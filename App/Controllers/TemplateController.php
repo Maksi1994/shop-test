@@ -1,26 +1,28 @@
 <?
+
 namespace App\Controllers;
 
 class TemplateController
 {
     static public $data;
-
-    private function __construct()
-    {
-
-    }
+    static public $routerParams;
 
     static function setData($data)
     {
         self::$data = $data;
     }
 
-    static function view($controller, $method)
+    static function getTemplatePath($routerParams)
     {
-        $pathToTamplate = $_SERVER['DOCUMENT_ROOT'] . '/App/Views/' . ucfirst($controller) . '/' . ucfirst($method) . '.php';
+        $sitePart = $routerParams->sitePart === 'backend' ? 'Backend' : '';
+        $pathToTemplate = $_SERVER['DOCUMENT_ROOT'] . "/App/Views/$sitePart/" . ucfirst($routerParams->controller) . '/' . ucfirst($routerParams->action) . '.php';
 
-        if (is_file($pathToTamplate)) {
-          require_once $pathToTamplate;
-        }
+        return $pathToTemplate;
+    }
+
+    static function view($routerParams)
+    {
+        self::$routerParams = $routerParams;
+        require_once self::getTemplatePath($routerParams);
     }
 }
