@@ -827,24 +827,32 @@ textarea.input {
 .banner h1 {
     font-size: 36px;
     text-transform: uppercase;
+    color:#000;
 }
 
+.promotion-banner {
+    height: 250px;
+    border: 1px solid gray;
+    border-radius: 3px;
+}
 /*=========================================================
 	05 -> HOME SLIDER
 ===========================================================*/
 
 #home .home-wrap {
     margin-left: 270px;
+    height: 500px;
 }
 
 #home-slick {
     height: 500px;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-left: 40px;
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-auto-flow: row;
     grid-gap: 20px;
+
 }
 
 #home-slick .banner {
@@ -932,10 +940,15 @@ textarea.input {
 .product.product-single .product-thumb {
     position: relative;
     margin-bottom: 15px;
+    height: 300px;
 }
 
 .product.product-single .product-thumb > img {
     width: 100%;
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
 }
 
 .product.product-single .product-thumb:after {

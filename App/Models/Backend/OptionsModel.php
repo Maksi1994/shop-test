@@ -1,7 +1,9 @@
 <?php
 namespace App\Models\Backend;
 
-class OptionsModel extends BackendBaseModel
+use App\Models\BaseModel;
+
+class OptionsModel extends BaseModel
 {
     public function __construct()
     {

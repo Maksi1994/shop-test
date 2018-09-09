@@ -2,7 +2,9 @@
 
 namespace App\Models\Backend;
 
-class ProductModel extends BackendBaseModel
+use App\Models\BaseModel;
+
+class ProductModel extends BaseModel
 {
 
     public function __construct()

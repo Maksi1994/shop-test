@@ -44,8 +44,6 @@ class Router
         // obtain method's name;
         $sitePart = $routing->sitePart === 'backend' ? 'Backend' : '';
 
-        //var_dump("{$_SERVER['DOCUMENT_ROOT']}/App/Controllers/" . (empty($sitePart) ? "" : "$sitePart/") . "{$routing->controller}Controller.php");
-
         if (is_file("{$_SERVER['DOCUMENT_ROOT']}/App/Controllers/" . (empty($sitePart) ? "" : "$sitePart/") . "{$routing->controller}Controller.php")) {
 
             if ($sitePart) {

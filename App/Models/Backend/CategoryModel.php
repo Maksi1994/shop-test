@@ -1,7 +1,9 @@
 <?php
 namespace App\Models\Backend;
 
-class CategoryModel extends BackendBaseModel
+use App\Models\BaseModel;
+
+class CategoryModel extends BaseModel
 {
     public function __construct()
     {

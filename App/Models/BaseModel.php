@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Backend;
+namespace App\Models;
 
 use App\Tools\Db;
 
-class BackendBaseModel extends Db
+class BaseModel extends Db
 {
     protected $pdo;
 

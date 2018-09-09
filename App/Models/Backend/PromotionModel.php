@@ -2,7 +2,9 @@
 
 namespace App\Models\Backend;
 
-class PromotionModel extends BackendBaseModel {
+use App\Models\BaseModel;
+
+class PromotionModel extends BaseModel {
 
 
     public function __construct()
