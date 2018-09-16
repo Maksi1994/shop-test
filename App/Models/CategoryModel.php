@@ -22,4 +22,17 @@ class CategoryModel extends BaseModel
         return $formedCategories;
     }
 
+    public function getCategory($id) {
+        $stmt = $this->pdo->prepare('SELECT 
+         name,
+         photo
+         FROM categories WHERE categories.id  = :catId');
+
+        $stmt->bindValue(':catId', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+
 }

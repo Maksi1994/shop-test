@@ -22,7 +22,7 @@ class Router
 
         $controllerDivided = explode('/', trim($controllerSegment, '/'));
         $sitePart = $controllerDivided[0] === 'backend' ? 'backend' : 'frontend';
-        $controllerDivided = array_slice($controllerDivided, 1);
+        $controllerDivided = $sitePart === 'backend' ? array_slice($controllerDivided, 1) : $controllerDivided;
 
         parse_str($queryParamsSegment, $queryParams);
 
@@ -43,6 +43,7 @@ class Router
         $routing = self::getRouteInfo();
         // obtain method's name;
         $sitePart = $routing->sitePart === 'backend' ? 'Backend' : '';
+     //   var_dump(is_file("{$_SERVER['DOCUMENT_ROOT']}/App/Controllers/" . (empty($sitePart) ? "" : "$sitePart/") . "{$routing->controller}Controller.php"));
 
         if (is_file("{$_SERVER['DOCUMENT_ROOT']}/App/Controllers/" . (empty($sitePart) ? "" : "$sitePart/") . "{$routing->controller}Controller.php")) {
 
@@ -63,7 +64,11 @@ class Router
                 return [];
             }
         } else {
-            header("location: /{$routing->sitePart}");
+            if($routing->sitePart === 'backend') {
+                header("location: /{$routing->sitePart}");
+            } else {
+                header("location: /");
+            }
         }
     }
 }

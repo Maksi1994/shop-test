@@ -33,10 +33,6 @@ class  BaseController
             } else if ($user['role'] === 'admin') {
                 $this->user = $user;
             }
-        } else {
-            if (!$user) {
-                header('location: /user/login');
-            }
         }
     }
 }

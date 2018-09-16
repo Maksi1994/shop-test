@@ -2,8 +2,7 @@
 function build_tree($cats, $parent_id)
 {
     if (is_array($cats) and isset($cats[$parent_id])) {
-        $tree = "<li class='dropdown side-dropdown'>
-<a class='dropdown-toggle' data-toggle='dropdown' aria-expanded='true'>Women’s Clothing <i class='fa fa-angle-right'></i></a>";
+        $tree = '<ul class="m-0 d-table categories-tree">';
         foreach ($cats[$parent_id] as $cat) {
             $tree .= "<li class='item'>
         <img class='icon' src='/assets/icons/categories/{$cat['photo']}'>
@@ -11,53 +10,10 @@ function build_tree($cats, $parent_id)
 
             $tree .= build_tree($cats, $cat['id']);
             $tree .= '</li>';
-
-
-            <div class="custom-menu">
-                <div class="row" >
-                    <div class="col-md-4" >
-                        <ul class="list-links" >
-                            <li ><a href = "#" > Women’s Clothing </a ></li >
-                            <li ><a href = "#" > Men’s Clothing </a ></li >
-                            <li ><a href = "#" > Phones & Accessories </a ></li >
-                            <li ><a href = "#" > Jewelry & Watches </a ></li >
-                            <li ><a href = "#" > Bags & Shoes </a ></li >
-                        </ul >
-                        <hr class="hidden-md hidden-lg" >
-                    </div >
-                    <div class="col-md-4" >
-                        <ul class="list-links" >
-                            <li >
-                                <h3 class="list-links-title" > Categories</h3 ></li >
-                            <li ><a href = "#" > Women’s Clothing </a ></li >
-                            <li ><a href = "#" > Men’s Clothing </a ></li >
-                            <li ><a href = "#" > Phones & Accessories </a ></li >
-                            <li ><a href = "#" > Jewelry & Watches </a ></li >
-                            <li ><a href = "#" > Bags & Shoes </a ></li >
-                        </ul >
-                        <hr class="hidden-md hidden-lg" >
-                    </div >
-                    <div class="col-md-4" >
-                        <ul class="list-links" >
-                            <li >
-                                <h3 class="list-links-title" > Categories</h3 ></li >
-                            <li ><a href = "#" > Women’s Clothing </a ></li >
-                            <li ><a href = "#" > Men’s Clothing </a ></li >
-                            <li ><a href = "#" > Phones & Accessories </a ></li >
-                            <li ><a href = "#" > Jewelry & Watches </a ></li >
-                            <li ><a href = "#" > Bags & Shoes </a ></li >
-                        </ul >
-                    </div >
-                </div >
-            </div >
-        </li >
         }
 
         $tree .= '</ul>';
-    } else {
-        $tree = '';
-        return $tree;
-    };
+    } else return null;
 
     return $tree;
 }
@@ -66,62 +22,75 @@ function build_tree($cats, $parent_id)
 
 <div class="category-nav">
     <span class="category-header">Categories <i class="fa fa-list"></i></span>
-    <ul class="category-list">
 
-        <?= build_tree(self::$data['categories'], 0) ?>
-
-        <li><a href="/products/getProducts/1/1">Men’s Clothing</a></li>
-
-        <li class="dropdown side-dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Phones & Accessories <i
-                        class="fa fa-angle-right"></i></a>
-            <div class="custom-menu">
-                <div class="row">
-                    <div class="col-md-4">
-                        <ul class="list-links">
-                            <li>
-                                <h3 class="list-links-title">Categories</h3></li>
-                            <li><a href="#">Women’s Clothing</a></li>
-                            <li><a href="#">Men’s Clothing</a></li>
-                            <li><a href="#">Phones & Accessories</a></li>
-                            <li><a href="#">Jewelry & Watches</a></li>
-                            <li><a href="#">Bags & Shoes</a></li>
-                        </ul>
-                        <hr>
-                        <ul class="list-links">
-                            <li>
-                                <h3 class="list-links-title">Categories</h3></li>
-                            <li><a href="#">Women’s Clothing</a></li>
-                            <li><a href="#">Men’s Clothing</a></li>
-                            <li><a href="#">Phones & Accessories</a></li>
-                            <li><a href="#">Jewelry & Watches</a></li>
-                            <li><a href="#">Bags & Shoes</a></li>
-                        </ul>
-                        <hr class="hidden-md hidden-lg">
-                    </div>
-                    <div class="col-md-4">
-                        <ul class="list-links">
-                            <li>
-                                <h3 class="list-links-title">Categories</h3></li>
-                            <li><a href="#">Women’s Clothing</a></li>
-                            <li><a href="#">Men’s Clothing</a></li>
-                            <li><a href="#">Phones & Accessories</a></li>
-                            <li><a href="#">Jewelry & Watches</a></li>
-                            <li><a href="#">Bags & Shoes</a></li>
-                        </ul>
-                        <hr>
-                        <ul class="list-links">
-                            <li>
-                                <h3 class="list-links-title">Categories</h3></li>
-                            <li><a href="#">Women’s Clothing</a></li>
-                            <li><a href="#">Men’s Clothing</a></li>
-                            <li><a href="#">Phones & Accessories</a></li>
-                            <li><a href="#">Jewelry & Watches</a></li>
-                            <li><a href="#">Bags & Shoes</a></li>
-                        </ul>
-                    </div>
-                </div>
+    <ul class="menu">
+        <li class="item">
+            <div class="img-wrap">
+                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
             </div>
+            <a href="">
+                sdasda
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <ul class="submenu">
+                <li class="item">
+                    <div class="img-wrap">
+                        <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+                    </div>
+                    <a href="">
+                        sdasda
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li class="item">
+                            <div class="img-wrap">
+                                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+                            </div>
+                            <a href="">
+                                sdasda
+                            </a></li>
+                        <li class="item">
+                            <div class="img-wrap">
+                                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+                            </div>
+                            <a href="">
+                                sdasda
+                            </a>
+                        </li>
+                        <li class="item"><div class="img-wrap">
+                                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+                            </div>
+                            <a href="">
+                                sdasda
+                            </a></li>
+                        <li class="item"> <div class="img-wrap">
+                                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+                            </div>
+                            <a href="">
+                                sdasda
+                            </a></li>
+                        <li class="item"> <div class="img-wrap">
+                                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+                            </div>
+                            <a href="">
+                                sdasda
+                            </a></li>
+                    </ul>
+
+                </li>
+                <li class="item"> dasda</li>
+                <li class="item"> dasda</li>
+                <li class="item"> dasda</li>
+                <li class="item"> dasda</li>
+            </ul>
+        </li>
+        <li class="item">
+            <div class="img-wrap">
+                <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
+            </div>
+            <a href="">
+                sdasda
+            </a>
         </li>
     </ul>
 </div>
