@@ -49,13 +49,13 @@
                             <img src="/assets/images/products/<?= $product['photo'] ?>" alt="">
                             <div class="product-label">
                                 <span>New</span>
-                                <? if ($product['promotion_id']) { ?>
-                                    <span class="sale">-20%</span>
+                                <? if ($product['promotionId']) { ?>
+                                    <span class="sale">-<?=$product['promotionPercent']?>%</span>
                                 <? } ?>
                             </div>
                         </div>
                         <div class="product-body">
-                            <h3 class="product-price">$ <?= $product['price'] ?></h3>
+                            <h3 class="product-price">$ <?= $product['newPrice'] ?? $product['price'] ?></h3>
                             <h2 class="product-name"><a href="#"><?= $product['name'] ?></a></h2>
                             <div class="product-btns">
                                 <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart

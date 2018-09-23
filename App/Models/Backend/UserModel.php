@@ -1,5 +1,5 @@
 <?
-namespace App\Models;
+namespace App\Models\Backend;
 use App\Models\CryptModel;
 use App\Tools\Db;
 
@@ -39,14 +39,14 @@ class UserModel extends Db
         }
     }
 
-    public function setCurrUser($idUser)
+    public function setCurrUser($idUser, $sitePart)
     {
-        setcookie('auth_id', CryptModel::crypt($idUser, 'e'), time() + 31556926, '/');
+        setcookie('auth_id', CryptModel::crypt($idUser, 'e'), time() + 31556926, '/'.$sitePart);
     }
 
-    public function clearCurrUser()
+    public function clearCurrUser($sitePart)
     {
-        setcookie('auth_id', null, -1, '/');
+        setcookie('auth_id', null, -1, '/'.$sitePart);
     }
 
     public function createUser($data)

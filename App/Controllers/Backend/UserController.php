@@ -32,7 +32,7 @@ class UserController extends BaseController
 
                 if ($user) {
                     if ($user->password === $_POST['password']) {
-                        $this->userModel->setCurrUser($user->id);
+                        $this->userModel->setCurrUser($user->id, 'backend');
                         $way = '/backend/';
                     }
                 } else {
@@ -46,7 +46,7 @@ class UserController extends BaseController
     }
 
     public function logout() {
-      $this->userModel->clearCurrUser();
+      $this->userModel->clearCurrUser('backend');
       header('Location: /backend/user/login');
     }
 

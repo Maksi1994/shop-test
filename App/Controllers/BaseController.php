@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
+use App\Models\Backend\UserModel;
 
 class  BaseController
 {
@@ -13,6 +13,7 @@ class  BaseController
     public function __construct($routerInfo)
     {
         $this->routerInfo = $routerInfo;
+
         $this->userModel = new UserModel();
         $this->checkAccess();
     }

@@ -2,11 +2,15 @@
 function build_tree($cats, $parent_id)
 {
     if (is_array($cats) and isset($cats[$parent_id])) {
-        $tree = '<ul class="m-0 d-table categories-tree">';
+        $tree = ' <ul class="menu">';
         foreach ($cats[$parent_id] as $cat) {
             $tree .= "<li class='item'>
-        <img class='icon' src='/assets/icons/categories/{$cat['photo']}'>
-        <a href='/backend/categories/showOne/{$cat['id']}' class='btn  mb-2 active btn-primary' role='button' aria-pressed='true'>{$cat['name']}</a>";
+       <div class='img-wrap'>
+        <img class='img' src='/assets/icons/categories/{$cat['photo']}'>
+       </div>
+        <a href='/products/getProducts/1/{$cat['id']}' class='as fa-chevron-right'>{$cat['name']}
+        ".((is_array($cats[$cat['id']])) ? "<i class='fas fa-chevron-right'></i>" : "")."
+        </a>";
 
             $tree .= build_tree($cats, $cat['id']);
             $tree .= '</li>';
@@ -22,7 +26,7 @@ function build_tree($cats, $parent_id)
 
 <div class="category-nav">
     <span class="category-header">Categories <i class="fa fa-list"></i></span>
-
+     <!--
     <ul class="menu">
         <li class="item">
             <div class="img-wrap">
@@ -32,7 +36,7 @@ function build_tree($cats, $parent_id)
                 sdasda
                 <i class="fas fa-chevron-right"></i>
             </a>
-            <ul class="submenu">
+            <ul class="menu">
                 <li class="item">
                     <div class="img-wrap">
                         <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
@@ -41,7 +45,7 @@ function build_tree($cats, $parent_id)
                         sdasda
                         <i class="fas fa-chevron-right"></i>
                     </a>
-                    <ul class="submenu">
+                    <ul class="menu">
                         <li class="item">
                             <div class="img-wrap">
                                 <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
@@ -57,19 +61,22 @@ function build_tree($cats, $parent_id)
                                 sdasda
                             </a>
                         </li>
-                        <li class="item"><div class="img-wrap">
+                        <li class="item">
+                            <div class="img-wrap">
                                 <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
                             </div>
                             <a href="">
                                 sdasda
                             </a></li>
-                        <li class="item"> <div class="img-wrap">
+                        <li class="item">
+                            <div class="img-wrap">
                                 <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
                             </div>
                             <a href="">
                                 sdasda
                             </a></li>
-                        <li class="item"> <div class="img-wrap">
+                        <li class="item">
+                            <div class="img-wrap">
                                 <img class="img" src="/assets/icons/categories/icons8-котелок-64.png" alt="">
                             </div>
                             <a href="">
@@ -93,4 +100,8 @@ function build_tree($cats, $parent_id)
             </a>
         </li>
     </ul>
+
+    -->
+
+    <?=build_tree($categories, 0)?>
 </div>

@@ -21,8 +21,8 @@ class IndexController extends BaseController {
     }
 
     public  function  indexMethod() {
+
         return [
-          'categories' => $this->categoryModel->getAllCategories(),
           'products' => $this->productModel->getLastProductsPreview(),
           'promotions' => array_slice($this->promotionModel->getPromotions(1), 0, 6)
         ];

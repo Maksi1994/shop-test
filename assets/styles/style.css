@@ -250,6 +250,7 @@ textarea.input {
 .section {
     padding-top: 30px;
     padding-bottom: 30px;
+    min-height: 100vh;
 }
 
 .section-grey {
@@ -261,11 +262,15 @@ textarea.input {
     margin-bottom: 15px;
     margin-top: 15px;
     border-bottom: 1px solid #DADADA;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .section-title .title {
     display: inline-block;
     text-transform: uppercase;
+    flex-shrink: 0;
 }
 
 .section-title:after {
@@ -278,6 +283,45 @@ textarea.input {
     background-color: #F8694A;
 }
 
+
+.section-title .tools-bar {
+    display: flex;
+    margin-left: auto;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.section-title .tools-bar .item {
+    margin-left: auto;
+}
+
+.section-title .tools-bar .item {
+    margin-left: 20px;
+    width: 60px;
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    justify-content: space-between;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1.2em;
+    border:1px solid gray;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.section-title .tools-bar .item.active {
+    background:  #F8694A;
+    color:#fff;
+    border-color: transparent;
+}
+
+.section-title .tools-bar .item:first-child {
+    margin-left: 0;
+}
 /*----------------------------*\
 	Breadcrumb
 \*----------------------------*/
@@ -1284,6 +1328,7 @@ textarea.input {
 
 .product-view > img {
     width: 100%;
+    max-width: 450px;
 }
 
 /*----------------------------*\
@@ -1684,12 +1729,8 @@ textarea.input {
     cursor: pointer;
 }
 
-.category-nav:hover >  .menu {
-    display: block;
-}
-
-.menu {
-    z-index: 10;
+.category-nav > .menu {
+    z-index: 99;
     position: absolute;
     border-left: 1px solid #eee;
     width: 100%;
@@ -1697,18 +1738,18 @@ textarea.input {
     display: none;
 }
 
-.menu > * {
-    box-sizing: border-box;
+.category-nav:hover > .menu {
+    display: block;
 }
 
-.menu .submenu {
-    display: none;
+.menu > * {
+    box-sizing: border-box;
 }
 
 .menu .item {
     padding: 15px;
     list-style: none;
-    background: rgba(248,105,74, 0.9);
+    background: rgba(248,105,74, 1);
     color: #fff;
     font-weight: 700;
     position: relative;
@@ -1761,16 +1802,50 @@ textarea.input {
     margin-left: auto;
 }
 
-.menu .item .submenu {
+.menu .item .menu {
     background: #fff;
     position: absolute;
     left: 100%;
-    top: 0px;
+    top: 0;
     border-left: 1px solid #eee;
     width: 100%;
 }
 
-.menu .item:hover > .submenu,  .menu .item .submenu:hover {
+.menu .item > .menu {
+    display: none;
+}
+
+.menu > .item:hover > .menu {
     display: block;
+}
+
+.pagination-wrap  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.pagination-wrap .item, .pagination-wrap .item:hover {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background: #fff;
+    display: block;
+    text-decoration: none;
+    line-height: 50px;
+    vertical-align: middle;
+    text-align: center;
+    color: #F8694A;
+    font-size: 1.4em;
+}
+.pagination-wrap .item.active {
+    background-color: #F8694A;
+    color:#fff;
+}
+.pagination-wrap .item:not(:first-child) {
+    margin-left: 15px;
 }
 

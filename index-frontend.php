@@ -2,10 +2,15 @@
 
 use \App\Tools\Router;
 use \App\Controllers\TemplateController;
+use \App\Models\CategoryModel;
 
 // init routing
 $routerParams = Router::getRouteInfo();
+$categoryModel = new CategoryModel;
 $data = Router::run();
+
+// init menu
+$categories = $categoryModel->getFormattedCategories();
 ?>
 
 <!DOCTYPE html>
@@ -38,9 +43,8 @@ $data = Router::run();
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="/assets/styles/style.css"/>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 
 </head>
@@ -87,34 +91,27 @@ $data = Router::run();
                 <ul class="header-btns">
                     <!-- Account -->
                     <li class="header-account dropdown default-dropdown">
-                        <div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
-                            <div class="header-btns-icon">
-                                <i class="fa fa-user-o"></i>
+                        <? if (!USER['auth']) { ?>
+                            <div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
+                                <strong class="text-uppercase">Authentication</strong>
                             </div>
-                            <strong class="text-uppercase">My Account <i class="fa fa-caret-down"></i></strong>
-                        </div>
-                        <a href="#" class="text-uppercase">Login</a> / <a href="#" class="text-uppercase">Join</a>
-                        <ul class="custom-menu">
-                            <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-                            <li><a href="#"><i class="fa fa-heart-o"></i> My Wishlist</a></li>
-                            <li><a href="#"><i class="fa fa-exchange"></i> Compare</a></li>
-                            <li><a href="#"><i class="fa fa-check"></i> Checkout</a></li>
-                            <li><a href="#"><i class="fa fa-unlock-alt"></i> Login</a></li>
-                            <li><a href="#"><i class="fa fa-user-plus"></i> Create An Account</a></li>
-                        </ul>
+                            <a href="/login" class="text-uppercase">Login</a> / <a href="/regist" class="text-uppercase">Join</a>
+                        <? } else { ?>
+                            <a href="/logout" class="text-uppercase">Logout</a>
+                        <? } ?>
                     </li>
                     <!-- /Account -->
 
                     <!-- Cart -->
                     <li class="header-cart dropdown default-dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <div class="header-btns-icon">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span class="qty">3</span>
-                            </div>
-                            <strong class="text-uppercase">My Cart:</strong>
-                            <br>
-                            <span>35.20$</span>
+
+                            <? if (USER['auth']) { ?>
+                                <div class="header-btns-icon">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span class="qty">3</span>
+                                </div>
+                            <? } ?>
                         </a>
                         <div class="custom-menu">
                             <div id="shopping-cart">
@@ -142,7 +139,8 @@ $data = Router::run();
                                 </div>
                                 <div class="shopping-cart-btns">
                                     <button class="main-btn">View Cart</button>
-                                    <button class="primary-btn">Checkout <i class="fa fa-arrow-circle-right"></i></button>
+                                    <button class="primary-btn">Checkout <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -169,22 +167,16 @@ $data = Router::run();
     <div class="container">
         <div id="responsive-nav">
             <!-- category nav -->
-             <? require_once 'App/Views/+shared/menu-categories.php' ?>
+            <? require_once 'App/Views/+shared/menu-categories.php' ?>
             <!-- /category nav -->
 
             <!-- menu nav -->
             <div class="menu-nav">
                 <span class="menu-header">Menu <i class="fa fa-bars"></i></span>
                 <ul class="menu-list">
-                    <li><a href="/" class="<?= Router::isActive('/')?>" >Home</a></li>
+                    <li><a href="/" class="<?= Router::isActive('/') ?>">Home</a></li>
                     <li><a href="#">Promotions</a></li>
                     <li><a href="#">Most Popular</a></li>
-                    <li class="dropdown default-dropdown ml-auto"><a class="dropdown-toggle" data-toggle="dropdown"
-                                                             aria-expanded="true">Pages <i class="fa fa-caret-down"></i></a>
-                        <ul class="custom-menu">
-                            <li><a href="index.html">About shop</a></li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
             <!-- menu nav -->
@@ -201,7 +193,7 @@ TemplateController::view($routerParams);
 ?>
 
 <!-- FOOTER -->
-<footer id="footer" class="section section-grey">
+<footer id="footer" class="section-grey">
     <!-- container -->
     <div class="container">
         <!-- row -->

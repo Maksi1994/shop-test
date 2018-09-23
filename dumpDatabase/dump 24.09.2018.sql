@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы shop.categories: ~4 rows (приблизительно)
+-- Дамп данных таблицы shop.categories: ~5 rows (приблизительно)
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
 INSERT INTO `categories` (`id`, `name`, `parent_id`, `photo`) VALUES
 	(21, 'Mens Clothes', 0, 'icons8-мужчина-пользователь-50.png'),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `options` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы shop.options: ~0 rows (приблизительно)
+-- Дамп данных таблицы shop.options: ~1 rows (приблизительно)
 /*!40000 ALTER TABLE `options` DISABLE KEYS */;
 INSERT INTO `options` (`id`, `name`) VALUES
 	(1, 'size');
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `options_values` (
   CONSTRAINT `options_values_ibfk_1` FOREIGN KEY (`option_id`) REFERENCES `options` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы shop.options_values: ~4 rows (приблизительно)
+-- Дамп данных таблицы shop.options_values: ~3 rows (приблизительно)
 /*!40000 ALTER TABLE `options_values` DISABLE KEYS */;
 INSERT INTO `options_values` (`id`, `name`, `option_id`) VALUES
 	(5, 'middle', 1),
@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `products_promotions` (
   CONSTRAINT `products_promotions_ibfk_6` FOREIGN KEY (`promotion_id`) REFERENCES `promotions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы shop.products_promotions: ~3 rows (приблизительно)
+-- Дамп данных таблицы shop.products_promotions: ~4 rows (приблизительно)
 /*!40000 ALTER TABLE `products_promotions` DISABLE KEYS */;
 INSERT INTO `products_promotions` (`promotion_id`, `product_id`, `id`) VALUES
 	(1, 9, 1),

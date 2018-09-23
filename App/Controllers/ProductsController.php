@@ -21,17 +21,29 @@ class ProductsController extends BaseController
 
     public function getProducts($page, $category, $orderType = 'priceDESC')
     {
-        $categories = $this->categoryModel->getAllCategories();
-        $isExistCategory = array_search((int)$category, array_keys($categories));
+        $categories = $this->categoryModel->getFormattedCategories();
+        $allKeys = array_keys($categories);
+        $allIds = [];
+        $countPages = ceil(((int) $this->productModel->getCountOfProducts($category)) / 10);
 
-        if (!$isExistCategory) {
+        foreach ($allKeys as $key) {
+            $allIds = array_merge($allIds, array_keys($categories[$key]));
+        }
+
+        $isExistCategory = array_search((int) $category, $allIds);
+
+        if ($isExistCategory === false || $category == 0) {
             header('location: /errors/notFound');
             exit;
         }
 
+        $childrenCategories = is_array($categories[$category]) ? $categories[$category] : [];
+
         return [
-            'products' => $this->productModel->getProducts($page, array_merge(array_keys($categories[$category]), [$category]), $orderType),
-            'category' => $this->categoryModel->getCategory($category)
+            'products' => $this->productModel->getProducts($page, array_merge(array_keys($childrenCategories), [$category]), $orderType),
+            'category' => $this->categoryModel->getCategory($category),
+            'countPages' => $countPages,
+            'page' => $page
         ];
     }
 
@@ -40,10 +52,10 @@ class ProductsController extends BaseController
 
     }
 
-    public function getProduct($id)
+    public function getProduct($id, $promotionId = null)
     {
         return [
-            'product' => $this->productModel->getProduct($id)
+            'product' => $this->productModel->getProduct($id, $promotionId)
         ];
     }
 }

@@ -1,7 +1,7 @@
 <?
 
 use \App\Tools\Router;
-use \App\Models\UserModel;
+use \App\Models\Backend\UserModel;
 
 require_once './vendor/autoload.php';
 

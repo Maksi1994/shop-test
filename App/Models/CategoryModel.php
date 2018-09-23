@@ -10,7 +10,7 @@ class CategoryModel extends BaseModel
         parent::__construct();
     }
 
-    public function getAllCategories()
+    public function getFormattedCategories()
     {
         $categories = $this->pdo->query('SELECT * FROM categories')->fetchAll(\PDO::FETCH_ASSOC);
         $formedCategories = [];
@@ -22,8 +22,10 @@ class CategoryModel extends BaseModel
         return $formedCategories;
     }
 
-    public function getCategory($id) {
+    public function getCategory($id)
+    {
         $stmt = $this->pdo->prepare('SELECT 
+          id,
          name,
          photo
          FROM categories WHERE categories.id  = :catId');
