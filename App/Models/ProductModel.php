@@ -16,17 +16,23 @@ class ProductModel extends BaseModel
         $filter = '';
 
         switch ($orderFilter) {
-            case 'priceDESC':
-                $filter = 'ORDER BY products.price DESC';
-                break;
             case 'priceASC':
                 $filter = 'ORDER BY products.price ASC';
                 break;
-            case 'newest':
-                $filter = 'ORDER BY products.id';
+            case 'priceDESC':
+                $filter = 'ORDER BY products.price DESC';
                 break;
-            case 'popular':
-                $filter = 'ORDER BY orderCount';
+            case 'newestASC':
+                $filter = 'ORDER BY products.id ASC';
+                break;
+            case 'newestDESC':
+                $filter = 'ORDER BY products.id DESC';
+                break;
+            case 'popularASC':
+                $filter = 'ORDER BY orderCount ASC';
+                break;
+            case 'popularDESc':
+                $filter = 'ORDER BY orderCount DESC';
         }
 
         foreach ($categoriesIds as $index => $id) {
@@ -44,9 +50,12 @@ class ProductModel extends BaseModel
             categories.photo as categoryPhoto,
              promotions.id as promotionId,
             promotions.percent as promotionPercent,
-            promotions.name as promotionName,
-               ROUND(
-             (CASE WHEN promotions.id IS NOT NULL
+            promotions.name as promotionName,  
+            (SELECT COUNT(products_orders.product_id) FROM products_orders
+            LEFT JOIN orders ON orders.id = products_orders.order_id
+            WHERE products_orders.product_id = products.id
+            ) as orderCount,
+            ROUND((CASE WHEN promotions.id IS NOT NULL
                 THEN products.price - ((products.price / 100) * promotions.percent)
                 ELSE NULL
               END), 2) as newPrice
@@ -64,7 +73,6 @@ class ProductModel extends BaseModel
 
         $stmt->bindValue(':limit', 10, \PDO::PARAM_INT);
         $stmt->bindValue(':offset', (($page - 1) * 10), \PDO::PARAM_INT);
-
         $stmt->execute();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -92,6 +100,7 @@ class ProductModel extends BaseModel
             LEFT JOIN promotions ON promotions.id = products_promotions.promotion_id
             ORDER BY products.id ASC LIMIT :limit');
 
+
         $stmt->bindValue(':limit', 6, \PDO::PARAM_INT);
 
         $stmt->execute();
@@ -107,6 +116,7 @@ class ProductModel extends BaseModel
             products.name,
             products.description,
             products.photo,
+            promotions.id as promotionId,
             promotions.percent as promotionPercent,
             promotions.name as promotionName,
             categories.name as categoryName,
@@ -120,9 +130,11 @@ class ProductModel extends BaseModel
             INNER JOIN categories ON categories.id = products.category_id 
             LEFT JOIN products_promotions ON products.id = products_promotions.product_id
             LEFT JOIN promotions ON promotions.id = products_promotions.promotion_id
-            WHERE products.id = :productId AND CASE promotion WHEN (:promotionId IS NOT NULL )');
+            WHERE products.id = :productId 
+            AND CASE WHEN :promotionId IS NOT NULL THEN promotions.id = :promotionId ElSE 1 END');
 
         $stmt->bindValue(':productId', $id, \PDO::PARAM_INT);
+        $stmt->bindValue(':promotionId', $promotionId, \PDO::PARAM_INT);
 
         $stmt->execute();
 

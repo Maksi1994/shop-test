@@ -23,11 +23,11 @@ class  BaseController
     {
         $user = $this->userModel->getCurrUser();
 
-        if ($this->routerInfo->controller === 'User') {
-            return;
-        }
-
         if ($this->routerInfo->sitePart === 'backend') {
+            if ($this->routerInfo->controller === 'User') {
+                return;
+            }
+
             if (!$user) {
                 header('location: /backend/user/login');
                 exit;

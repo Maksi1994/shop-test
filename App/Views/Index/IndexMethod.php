@@ -10,9 +10,9 @@
                 <? foreach (self::$data['promotions'] as $promotion) { ?>
                     <div class="banner banner-1 promotion-banner">
                         <div class="banner-caption text-center">
-                            <h1><?=$promotion['name']?></h1>
-                            <h3 class="font-weak">Discount <?=ceil($promotion['percent'])?>%</h3>
-                            <h3 class="font-weak"> <?= $promotion['description']?></h3>
+                            <h1><?= $promotion['name'] ?></h1>
+                            <h3 class="font-weak">Discount <?= ceil($promotion['percent']) ?>%</h3>
+                            <h3 class="font-weak"> <?= $promotion['description'] ?></h3>
                             <button class="primary-btn">Shop Now</button>
                         </div>
                     </div>
@@ -45,12 +45,13 @@
                 <div class="col-md-4 col-sm-6 col-xs-6">
                     <div class="product product-single">
                         <div class="product-thumb">
-                            <a class="main-btn quick-view" href="/products/getProduct/<?=$product['id']?>">View</a>
+                            <a class="main-btn quick-view"
+                               href="/products/getProduct/<?= $product['id'] ?>/<?= $product['promotionId'] ?>">View</a>
                             <img src="/assets/images/products/<?= $product['photo'] ?>" alt="">
                             <div class="product-label">
                                 <span>New</span>
                                 <? if ($product['promotionId']) { ?>
-                                    <span class="sale">-<?=$product['promotionPercent']?>%</span>
+                                    <span class="sale">-<?= $product['promotionPercent'] ?>%</span>
                                 <? } ?>
                             </div>
                         </div>
@@ -58,8 +59,12 @@
                             <h3 class="product-price">$ <?= $product['newPrice'] ?? $product['price'] ?></h3>
                             <h2 class="product-name"><a href="#"><?= $product['name'] ?></a></h2>
                             <div class="product-btns">
-                                <button class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart
-                                </button>
+                                <? if (USER['auth']) { ?>
+                                    <button class="primary-btn add-to-cart add-to-cart" data-product="<?=$product['id']?>" data-user="<?= USER['id'] ?>">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        Add to Cart
+                                    </button>
+                                <? } ?>
                             </div>
                         </div>
                     </div>

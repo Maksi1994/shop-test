@@ -61,7 +61,7 @@
                                            data-user-id="<?= USER['id'] ?>"
                                            value="1" type="number">
                                 </div>
-                                <button class="primary-btn add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Add to
+                                <button class="primary-btn add-to-cart-with-quantity"><i class="fa fa-shopping-cart"></i> Add to
                                     Cart
                                 </button>
                             </div>

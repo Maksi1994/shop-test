@@ -432,6 +432,10 @@ textarea.input {
 /*----------------------------*\
 	Account header
 \*----------------------------*/
+.header-btns {
+    display: flex;
+    align-items: center;
+}
 
 .header-btns > li {
     display: inline-block;
@@ -1773,6 +1777,9 @@ textarea.input {
     width: 100%;
     transition: padding-left 0.2s;
 }
+.menu .item a:before {
+    content: none;
+}
 
 .menu .item:hover > a {
     padding-left: 4px;
@@ -1847,5 +1854,15 @@ textarea.input {
 }
 .pagination-wrap .item:not(:first-child) {
     margin-left: 15px;
+}
+
+.login-form {
+    width: 750px;
+    min-height: calc(100vh - 370px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 100px auto;
 }
 

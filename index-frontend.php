@@ -45,8 +45,6 @@ $categories = $categoryModel->getFormattedCategories();
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
           integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
-
 </head>
 
 <body>
@@ -95,9 +93,9 @@ $categories = $categoryModel->getFormattedCategories();
                             <div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
                                 <strong class="text-uppercase">Authentication</strong>
                             </div>
-                            <a href="/login" class="text-uppercase">Login</a> / <a href="/regist" class="text-uppercase">Join</a>
+                            <a href="/users/getLoginForm" class="text-uppercase">Login</a> / <a href="/users/getRegistForm" class="text-uppercase">Join</a>
                         <? } else { ?>
-                            <a href="/logout" class="text-uppercase">Logout</a>
+                            <a href="/users/logout" class="text-uppercase">Logout</a>
                         <? } ?>
                     </li>
                     <!-- /Account -->
@@ -139,8 +137,6 @@ $categories = $categoryModel->getFormattedCategories();
                                 </div>
                                 <div class="shopping-cart-btns">
                                     <button class="main-btn">View Cart</button>
-                                    <button class="primary-btn">Checkout <i class="fa fa-arrow-circle-right"></i>
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -255,6 +251,8 @@ TemplateController::view($routerParams);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nstslider/1.0.13/jquery.nstSlider.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
 <script src="js/main.js"></script>
+<script src="/assets/js/cookies-handler.js"></script>
+<script src="/assets/js/add-to-cart-handler.js"></script>
 </body>
 
 </html>
