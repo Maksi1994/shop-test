@@ -16,7 +16,7 @@
         <!-- row -->
         <div class="row">
             <!--  Product Details -->
-            <div class="product product-details clearfix">
+            <div class="product product-details clearfix ">
                 <div class="col-md-6">
                     <div id="product-main-view">
                         <div class="product-view">
@@ -52,19 +52,24 @@
                             <? } ?>
                         </div>
 
-                        <? if (USER['auth']) { ?>
+                        <? if (USER['auth'] && !self::$data['product']['inCart']) { ?>
                             <div class="product-btns">
                                 <div class="qty-input">
                                     <span class="text-uppercase">QTY: </span>
                                     <input class="input product-quantity"
                                            data-id="<?= self::$data['product']['id'] ?>"
                                            data-user-id="<?= USER['id'] ?>"
+                                           data-promotion="<?= self::$data['product']['promotionId'] ?>"
                                            value="1" type="number">
                                 </div>
                                 <button class="primary-btn add-to-cart-with-quantity"><i class="fa fa-shopping-cart"></i> Add to
                                     Cart
                                 </button>
                             </div>
+                        <? } else if (USER['auth'] && self::$data['product']['inCart']) {?>
+                         <button class="primary-btn cart-btn"><i class="fa fa-shopping-cart"></i> 
+                             <a href="/cart/getCart">Already in Cart</a>
+                                </button>
                         <? } ?>
                     </div>
                 </div>

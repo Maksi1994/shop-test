@@ -156,6 +156,16 @@ hr {
 .primary-btn:hover, .primary-btn:focus {
     color: #FFF;
     background-color: #30323A;
+    
+}
+
+.primary-btn.cart-btn:hover, .primary-btn.cart-btn:focus {
+     color: #FFF;
+     background-color: #F8694A;
+} 
+
+.primary-btn.cart-btn a {
+    color: #fff;
 }
 
 /*----------------------------*\

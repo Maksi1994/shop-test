@@ -46,14 +46,21 @@ class ProductsController extends BaseController
         if (USER['auth']) {
             $productsInCart = $this->cartModel->getBasketData();
 
-            $products = array_map(function () {
-                if()
+            $products = array_map(function ($product) use ($productsInCart) {
+                foreach($productsInCart as $addedProduct) {
+                    if ($product['id'] === $addedProduct['id'] &&
+                        $addedProduct['promotion'] === $product['promotionId']) {
+                       $product['inCart'] = true; 
+                    }
+                }
+                
+                return $product;
             }, $products);
-            var_dump();
+            
         }
 
         return [
-            'products' => ,
+            'products' => $products,
             'category' => $this->categoryModel->getCategory($category),
             'countPages' => $countPages,
             'page' => $page,
@@ -67,9 +74,22 @@ class ProductsController extends BaseController
     }
 
     public function getProduct($id, $promotionId = null)
-    {
+    {      
+        $product = $this->productModel->getProduct($id, $promotionId);
+        
+        if (USER['auth']) {
+             $productsInCart = $this->cartModel->getBasketData();
+            
+             foreach($productsInCart as $addedProduct) {
+                 if ($product['id'] === $addedProduct['id'] &&
+                    $addedProduct['promotion'] === $product['promotionId']) {
+                     $product['inCart'] = true;
+                 }
+            } 
+        }
+        
         return [
-            'product' => $this->productModel->getProduct($id, $promotionId)
+            'product' => $product
         ];
     }
 }

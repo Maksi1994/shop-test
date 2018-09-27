@@ -22,7 +22,7 @@ class UsersController extends BaseController {
                     header("Location: /");
                 }
             } else {
-                header("Location: /users/login");
+                header("Location: /users/getLoginForm");
             }
         }
     }
