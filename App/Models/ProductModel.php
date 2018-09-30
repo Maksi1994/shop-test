@@ -141,6 +141,59 @@ class ProductModel extends BaseModel
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
+    public function getProductsByIds($data)
+    {
+        $productsPlaceholder = '';
+        $promotionsPlaceholder = '';
+
+        foreach ($data['products'] as $index => $id) {
+            $productsPlaceholder .= ":product$index" . (((count($data['products']) - 1) > $index) ? ',' : '');
+        }
+
+        foreach ($data['promotions'] as $index => $id) {
+            $promotionsPlaceholder .= ":promotion$index" . (((count($data['promotions']) - 1) > $index) ? ',' : '');
+        }
+
+        $stmt = $this->pdo->prepare("SELECT 
+            products.id,
+            products.price,
+            products.name,
+            products.description,
+            products.photo,
+            categories.name as catName,
+            categories.id as catId,
+            categories.photo as categoryPhoto,
+             promotions.id as promotionId,
+            promotions.percent as promotionPercent,
+            promotions.name as promotionName,  
+            (SELECT COUNT(products_orders.product_id) FROM products_orders
+            LEFT JOIN orders ON orders.id = products_orders.order_id
+            WHERE products_orders.product_id = products.id
+            ) as orderCount,
+            ROUND((CASE WHEN promotions.id IS NOT NULL
+                THEN products.price - ((products.price / 100) * promotions.percent)
+                ELSE NULL
+              END), 2) as newPrice
+            FROM products 
+            INNER JOIN categories ON categories.id = products.category_id 
+            LEFT JOIN products_promotions ON products_promotions.product_id = products.id
+            LEFT JOIN promotions ON promotions.id = products_promotions.promotion_id
+            WHERE products.id IN ($productsPlaceholder) 
+            AND (promotions.id IS NULL OR ".(!empty($promotionsPlaceholder) ? "promotions.id IN($promotionsPlaceholder)" : '0').')');
+
+        foreach ($data['products'] as $index => $id) {
+            $stmt->bindValue(":product$index", $id, \PDO::PARAM_INT);
+        }
+
+        foreach ($data['promotions'] as $index => $id) {
+            $stmt->bindValue(":promotion$index", $id, \PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function getCountOfProducts($catId)
     {
         $stmt = $this->pdo->prepare('SELECT COUNT(products.id) FROM products 

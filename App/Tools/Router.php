@@ -14,17 +14,21 @@ class Router
 
     static function getRouteInfo()
     {
+        $urlString = trim($_SERVER['REQUEST_URI']);
         $checkedParam = new \stdClass();
         $queryParams = [];
-        // parse request url
 
-        list($controllerSegment, $queryParamsSegment) = explode('?', trim($_SERVER['REQUEST_URI']));
+        // parse request url
+        if(strpos($urlString, '?') !== false) {
+            list($controllerSegment, $queryParamsSegment) = explode('?', trim($_SERVER['REQUEST_URI']));
+            parse_str($queryParamsSegment, $queryParams);
+        } else {
+            $controllerSegment = $urlString;
+        }
 
         $controllerDivided = explode('/', trim($controllerSegment, '/'));
         $sitePart = $controllerDivided[0] === 'backend' ? 'backend' : 'frontend';
         $controllerDivided = $sitePart === 'backend' ? array_slice($controllerDivided, 1) : $controllerDivided;
-
-        parse_str($queryParamsSegment, $queryParams);
 
         $checkedParam->sitePart = $sitePart;
 
@@ -43,7 +47,6 @@ class Router
         $routing = self::getRouteInfo();
         // obtain method's name;
         $sitePart = $routing->sitePart === 'backend' ? 'Backend' : '';
-     //   var_dump(is_file("{$_SERVER['DOCUMENT_ROOT']}/App/Controllers/" . (empty($sitePart) ? "" : "$sitePart/") . "{$routing->controller}Controller.php"));
 
         if (is_file("{$_SERVER['DOCUMENT_ROOT']}/App/Controllers/" . (empty($sitePart) ? "" : "$sitePart/") . "{$routing->controller}Controller.php")) {
 

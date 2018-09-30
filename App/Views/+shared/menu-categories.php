@@ -1,7 +1,7 @@
 <?
 function build_tree($cats, $parent_id)
 {
-    if (is_array($cats) and isset($cats[$parent_id])) {
+    if (is_array($cats) and !empty($cats[$parent_id])) {
         $tree = ' <ul class="menu">';
         foreach ($cats[$parent_id] as $cat) {
             $tree .= "<li class='item'>
@@ -9,7 +9,7 @@ function build_tree($cats, $parent_id)
         <img class='img' src='/assets/icons/categories/{$cat['photo']}'>
        </div>
         <a href='/products/getProducts/1/{$cat['id']}' class='as fa-chevron-right'>{$cat['name']}
-        ".((is_array($cats[$cat['id']])) ? "<i class='fas fa-chevron-right'></i>" : "")."
+        ".(!empty($cats[$cat['id']]) && (is_array($cats[$cat['id']])) ? "<i class='fas fa-chevron-right'></i>" : "")."
         </a>";
 
             $tree .= build_tree($cats, $cat['id']);

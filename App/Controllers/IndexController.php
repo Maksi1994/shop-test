@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\CartModel;
 use App\Models\CategoryModel;
 use App\Models\PromotionModel;
 use App\Models\ProductModel;
@@ -24,21 +25,22 @@ class IndexController extends BaseController {
 
     public  function  indexMethod() {
         $products = $this->productModel->getLastProductsPreview();
-        
+
         if (USER['auth']) {
             $productsInCart = $this->cartModel->getBasketData();
 
             $products = array_map(function ($product) use ($productsInCart) {
                 foreach($productsInCart as $addedProduct) {
-                    if ($product['id'] === $addedProduct['id'] &&
-                        $addedProduct['promotion'] === $product['promotionId']) {
-                       $product['inCart'] = true; 
+                    $hasPromotion = isset($product['promotionId']);
+
+                    if ($product['id'] === $addedProduct['id'] && (!$hasPromotion || $addedProduct['promotion'] === $product['promotionId'])) {
+                        $product['inCart'] = true;
                     }
                 }
-                
+
                 return $product;
             }, $products);
-            
+
         }
         
         return [

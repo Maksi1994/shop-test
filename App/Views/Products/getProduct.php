@@ -52,7 +52,7 @@
                             <? } ?>
                         </div>
 
-                        <? if (USER['auth'] && !self::$data['product']['inCart']) { ?>
+                        <? if (USER['auth'] && empty(self::$data['product']['inCart'])) { ?>
                             <div class="product-btns">
                                 <div class="qty-input">
                                     <span class="text-uppercase">QTY: </span>
@@ -66,7 +66,7 @@
                                     Cart
                                 </button>
                             </div>
-                        <? } else if (USER['auth'] && self::$data['product']['inCart']) {?>
+                        <? } else if (USER['auth'] && !empty(self::$data['product']['inCart'])) {?>
                          <button class="primary-btn cart-btn"><i class="fa fa-shopping-cart"></i> 
                              <a href="/cart/getCart">Already in Cart</a>
                                 </button>

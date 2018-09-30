@@ -69,7 +69,7 @@
                             <h3 class="product-price">$ <?= $product['newPrice'] ?? $product['price'] ?></h3>
                             <h2 class="product-name"><a href="#"><?= $product['name'] ?></a></h2>
                             <div class="product-btns">
-                                <? if (USER['auth'] && !$product['inCart']) { ?>
+                                <? if (USER['auth'] && empty($product['inCart'])) { ?>
                                     <button class="primary-btn add-to-cart"
                                             data-id="<?= $product['id'] ?>"
                                             data-user-id="<?= USER['id'] ?>"

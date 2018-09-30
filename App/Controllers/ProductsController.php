@@ -40,7 +40,7 @@ class ProductsController extends BaseController
             exit;
         }
 
-        $childrenCategories = is_array($categories[$category]) ? $categories[$category] : [];
+        $childrenCategories = !empty($categories[$category]) && is_array($categories[$category]) ? $categories[$category] : [];
         $products = $this->productModel->getProducts($page, array_merge(array_keys($childrenCategories), [$category]), $orderType);
 
         if (USER['auth']) {
@@ -48,8 +48,9 @@ class ProductsController extends BaseController
 
             $products = array_map(function ($product) use ($productsInCart) {
                 foreach($productsInCart as $addedProduct) {
-                    if ($product['id'] === $addedProduct['id'] &&
-                        $addedProduct['promotion'] === $product['promotionId']) {
+                    $hasPromotion = isset($product['promotionId']);
+
+                    if ($product['id'] === $addedProduct['id'] && (!$hasPromotion || $addedProduct['promotion'] === $product['promotionId'])) {
                        $product['inCart'] = true; 
                     }
                 }
@@ -81,8 +82,9 @@ class ProductsController extends BaseController
              $productsInCart = $this->cartModel->getBasketData();
             
              foreach($productsInCart as $addedProduct) {
-                 if ($product['id'] === $addedProduct['id'] &&
-                    $addedProduct['promotion'] === $product['promotionId']) {
+                 $hasPromotion = isset($product['promotionId']);
+
+                 if ($product['id'] === $addedProduct['id'] && (!$hasPromotion || $addedProduct['promotion'] === $product['promotionId'])) {
                      $product['inCart'] = true;
                  }
             } 

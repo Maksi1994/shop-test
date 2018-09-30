@@ -3,14 +3,44 @@
 use \App\Tools\Router;
 use \App\Controllers\TemplateController;
 use \App\Models\CategoryModel;
+use \App\Models\CartModel;
+use \App\Models\ProductModel;
 
 // init routing
 $routerParams = Router::getRouteInfo();
 $categoryModel = new CategoryModel;
+$cartModel = new CartModel();
+$productModel = new ProductModel();
+
 $data = Router::run();
 
 // init menu
 $categories = $categoryModel->getFormattedCategories();
+
+// init cart
+$basketValue = USER['auth'] ? $cartModel->getBasketData() : null;
+
+if (!empty($basketValue)) {
+    $basketProducts = [];
+
+    $basketProducts['products'] = array_map(function ($product) {
+        return $product['id'];
+    }, $basketValue);
+
+    $basketProducts['promotions'] = array_map(function ($product) {
+        return $product['promotion'];
+    }, array_filter($basketValue, function ($product) {
+        return !empty($product['promotion']);
+    }));
+
+    $basket = array_map(function ($basketPosition, $product) use (&$fullPrice) {
+        $product['count'] = $basketPosition['count'];
+        $fullPrice += $product['count'] * ($product['newPrice'] ?? $product['price']);
+
+        return $product;
+    }, $basketValue, $productModel->getProductsByIds($basketProducts));
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -93,7 +123,8 @@ $categories = $categoryModel->getFormattedCategories();
                             <div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
                                 <strong class="text-uppercase">Authentication</strong>
                             </div>
-                            <a href="/users/getLoginForm" class="text-uppercase">Login</a> / <a href="/users/getRegistForm" class="text-uppercase">Join</a>
+                            <a href="/users/getLoginForm" class="text-uppercase">Login</a> / <a
+                                    href="/users/getRegistForm" class="text-uppercase">Join</a>
                         <? } else { ?>
                             <a href="/users/logout" class="text-uppercase">Logout</a>
                         <? } ?>
@@ -107,39 +138,41 @@ $categories = $categoryModel->getFormattedCategories();
                             <? if (USER['auth']) { ?>
                                 <div class="header-btns-icon">
                                     <i class="fa fa-shopping-cart"></i>
-                                    <span class="qty">3</span>
+                                    <? if (!empty($basket)) { ?>
+                                        <span class="qty"><?= count($basket) ?></span>
+                                    <? } ?>
                                 </div>
                             <? } ?>
                         </a>
-                        <div class="custom-menu">
-                            <div id="shopping-cart">
-                                <div class="shopping-cart-list">
-                                    <div class="product product-widget">
-                                        <div class="product-thumb">
-                                            <img src="/assets/img/thumb-product01.jpg" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-                                            <h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-                                        </div>
-                                        <button class="cancel-btn"><i class="fa fa-trash"></i></button>
+                        <? if (!empty($basket)) { ?>
+                            <div class="custom-menu">
+                                <div id="shopping-cart">
+
+                                    <div class="shopping-cart-list">
+                                        <? foreach ($basket as $index => $product) { ?>
+                                            <div class="product product-widget">
+                                                <div class="product-thumb">
+                                                    <img src="/assets/images/products/<?= $product['photo'] ?>"" alt="">
+                                                </div>
+                                                <div class="product-body">
+                                                    <h3 class="product-price">
+                                                        $ <?= $product['newPrice'] ?? $product['price'] ?> <span
+                                                                class="qty">x<?=$product['count']?></span></h3>
+                                                    <h2 class="product-name"><a><?= $product['name'] ?></a></h2>
+                                                </div>
+                                            </div>
+
+                                        <? } ?>
                                     </div>
-                                    <div class="product product-widget">
-                                        <div class="product-thumb">
-                                            <img src="/assets/img/thumb-product01.jpg" alt="">
-                                        </div>
-                                        <div class="product-body">
-                                            <h3 class="product-price">$32.50 <span class="qty">x3</span></h3>
-                                            <h2 class="product-name"><a href="#">Product Name Goes Here</a></h2>
-                                        </div>
-                                        <button class="cancel-btn"><i class="fa fa-trash"></i></button>
+
+                                    <div class="shopping-cart-btns">
+                                        <a href="/cart/getCart">
+                                            <button class="main-btn">View Cart</button>
+                                        </a>
                                     </div>
-                                </div>
-                                <div class="shopping-cart-btns">
-                                    <button class="main-btn">View Cart</button>
                                 </div>
                             </div>
-                        </div>
+                        <? } ?>
                     </li>
                     <!-- /Cart -->
 
@@ -171,8 +204,7 @@ $categories = $categoryModel->getFormattedCategories();
                 <span class="menu-header">Menu <i class="fa fa-bars"></i></span>
                 <ul class="menu-list">
                     <li><a href="/" class="<?= Router::isActive('/') ?>">Home</a></li>
-                    <li><a href="#">Promotions</a></li>
-                    <li><a href="#">Most Popular</a></li>
+                    <li><a href="/promotions/getAll/1">Promotions</a></li>
                 </ul>
             </div>
             <!-- menu nav -->
@@ -251,8 +283,9 @@ TemplateController::view($routerParams);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nstslider/1.0.13/jquery.nstSlider.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-zoom/1.7.21/jquery.zoom.min.js"></script>
 <script src="js/main.js"></script>
-<script src="/assets/js/cookies-handler.js"></script>
-<script src="/assets/js/add-to-cart-handler.js"></script>
+<script data-name="cookies-handler" data-user="<?=USER['auth'] ? USER['id'] : ''?>" src="/assets/js/cookies-handler.js"></script>
+<script data-name="add-to-cart-handler" data-user="<?=USER['auth'] ? USER['id'] : ''?>" src="/assets/js/add-to-cart-handler.js"></script>
+<script data-name="cart" data-user="<?=USER['auth'] ? USER['id'] : ''?>" src="/assets/js/cart.js"></script>
 </body>
 
 </html>
