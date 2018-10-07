@@ -206,4 +206,60 @@ class ProductModel extends BaseModel
         return $stmt->fetch(\PDO::FETCH_NUM)[0];
     }
 
+
+    public function getProductsByPromotionId($id, $page, $orderFilter) {
+
+        switch ($orderFilter) {
+            case 'priceASC':
+                $filter = 'ORDER BY products.price ASC';
+                break;
+            case 'priceDESC':
+                $filter = 'ORDER BY products.price DESC';
+                break;
+            case 'newestASC':
+                $filter = 'ORDER BY products.id ASC';
+                break;
+            case 'newestDESC':
+                $filter = 'ORDER BY products.id DESC';
+                break;
+            case 'popularASC':
+                $filter = 'ORDER BY orderCount ASC';
+                break;
+            case 'popularDESc':
+                $filter = 'ORDER BY orderCount DESC';
+        }
+
+        $stmt = $this->pdo->prepare('SELECT 
+            products.id,
+            products.price,
+            products.name,
+            products.description,
+            products.photo,
+            categories.name as catName,
+            categories.id as catId,
+            categories.photo as categoryPhoto,
+             promotions.id as promotionId,
+            promotions.percent as promotionPercent,
+            promotions.name as promotionName,  
+            (SELECT COUNT(products_orders.product_id) FROM products_orders
+            LEFT JOIN orders ON orders.id = products_orders.order_id
+            WHERE products_orders.product_id = products.id) as orderCount,
+            ROUND((CASE WHEN promotions.id IS NOT NULL
+                THEN products.price - ((products.price / 100) * promotions.percent)
+                ELSE NULL
+              END), 2) as newPrice
+            FROM products 
+            INNER JOIN categories ON categories.id = products.category_id 
+            LEFT JOIN products_promotions ON products_promotions.product_id = products.id
+            LEFT JOIN promotions ON promotions.id = products_promotions.promotion_id
+            WHERE promotions.id = :promotionId
+            $filter LIMIT :limit OFFSET :offset');
+
+        $stmt->bindValue(':promotionId', $id, \PDO::PARAM_INT);
+        $stmt->bindValue('limit', 10);
+        $stmt->bindValue(':offset', ($page - 1) * 10);
+
+        var_dump($stmt->errorInfo());
+    }
+
 }

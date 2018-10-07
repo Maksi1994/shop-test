@@ -69,9 +69,15 @@ class ProductsController extends BaseController
         ];
     }
 
-    public function getProductsByPromotion($id)
+    public function getProductsByPromotion($id, $orderType = 'priceACS')
     {
+        $products = $this->productModel->getProductsByPromotionId($id, $orderType);
 
+        return [
+            'products' => $products,
+            'promotion' => $id,
+            'orderType' => $orderType
+        ];
     }
 
     public function getProduct($id, $promotionId = null)

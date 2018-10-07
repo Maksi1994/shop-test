@@ -76,11 +76,12 @@
                                         <? } ?>
                                     </td>
                                     <td class="qty text-center">
-                                        <input type="hidden" name="promotion=<?=$product['id']?>" value="<?=$product['promotionId']?>">
+                                        <input type="hidden" name="productpromotion=<?=$product['id']?>" value="<?=$product['promotionId']?>">
 
                                         <input min="0" class="input product-quantity" type="number"
                                                name="product=<?= $product['id'] ?>"
-                                               value="<?= $product['count'] ?>"></td>
+                                               value="<?= $product['count'] ?>">
+                                    </td>
                                     <td class="total text-center">
                                         <strong class="primary-color">$<span
                                                     class="full-price"><?= ($product['newPrice'] ?? $product['price']) * $product['count'] ?></span></strong>
